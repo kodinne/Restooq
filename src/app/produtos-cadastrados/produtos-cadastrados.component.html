@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cadastro de Produto</title>
+  </head>
+  <body>
+    <h2>Cadastro de Produto - Bermuda Masculina Cargo Sarja</h2>
+
+    <form id="produtoForm">
+      <label>Grupo: <input type="text" value="BERMUDAS" /></label>
+      <label>Código: <input type="text" value="1224" /></label>
+      <label>Fornecedor: <input type="text" value="Fornecedor ABC" /></label>
+      <label>Unidade: <input type="text" value="UN" /></label>
+      <label>Peso (g): <input type="number" /></label>
+      <label>Data: <input type="date" value="2018-01-03" /></label>
+      <label>Estoque Inicial: <input type="number" value="10" /></label>
+      <label>Custo Unitário: <input type="number" value="0.00" step="0.01" /></label>
+      <label>Tamanho: <input type="text" value="205" /></label>
+      <label>Código Tamanho: <input type="text" value="1226" /></label>
+      <label>Código de Barras: <input type="text" value="1226" /></label>
+      <label>Cor: <input type="text" value="205" /></label>
+      <label>Qtd Mínima em Estoque: <input type="number" value="10" /></label>
+
+      <div class="buttons">
+        <button type="button" onclick="adicionarItem()">Adicionar Item</button>
+        <button type="button">Gerar Código</button>
+        <button type="button">Compor Produto</button>
+        <button type="submit">Salvar</button>
+      </div>
+    </form>
+
+    <table id="tabelaItens">
+      <thead>
+        <tr>
+          <th>Qtd</th>
+          <th>Custo Unitário</th>
+          <th>Custo Total</th>
+          <th>Tamanho</th>
+          <th>Cód. Tamanho</th>
+          <th>Qtd Mínima</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="price-box">
+      <strong>Composição de Preço:</strong><br />
+      Markup: 59.92%<br />
+      Preço: R$ 1,00
+    </div>
+
+    <script>
+      function adicionarItem() {
+        const qtd = document.querySelector('input[value="10"]').value;
+        const custo = document.querySelector('input[value="0.00"]').value;
+        const tamanho = document.querySelector('input[value="205"]').value;
+        const codTam = document.querySelector('input[value="1226"]').value;
+        const minQtd = document.querySelector('input[value="10"]').value;
+        const total = (parseFloat(qtd) * parseFloat(custo)).toFixed(2);
+
+        const tabela = document.querySelector('#tabelaItens tbody');
+        const linha = `<tr>
+        <td>${qtd}</td>
+        <td>${custo}</td>
+        <td>${total}</td>
+        <td>${tamanho}</td>
+        <td>${codTam}</td>
+        <td>${minQtd}</td>
+      </tr>`;
+        tabela.innerHTML += linha;
+      }
+    </script>
+  </body>
+</html>

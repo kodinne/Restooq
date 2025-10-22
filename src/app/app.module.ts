@@ -3,14 +3,41 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CadastroProdutoComponent } from './cadastro-produto/cadastro-produto.component';
+import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
+import { PdvComponent } from './pdv/pdv.component';
+import { ProdutosCadastradosComponent } from './produtos-cadastrados/produtos-cadastrados.component';
+import { SobreComponent } from './sobre/sobre.component';
+import { FaqComponent } from './faq/faq.component';
+import { ContatoComponent } from './contato/contato.component';
+import { CadastroComponent } from './cadastro/cadastro.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HeaderModule } from './shared/header/header.module';
+import { FooterModule } from './shared/footer/footer.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CadastroProdutoComponent,
+    HomeComponent,
+    LoginComponent,
+    PdvComponent,
+    ProdutosCadastradosComponent,
+    SobreComponent,
+    FaqComponent,
+    ContatoComponent,
+    CadastroComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    FormsModule,
+    ReactiveFormsModule,
+    HeaderModule,
+    FooterModule,
+    AppRoutingModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

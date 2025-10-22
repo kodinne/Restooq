@@ -1,0 +1,96 @@
+/* ===== Layout Geral ===== */
+body {
+    background-color: var(--cor-5);
+    font-family: 'Poppins', sans-serif;
+    color: var(--cor-1);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* ===== Container do Login ===== */
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card {
+    background-color: var(--cor-5);
+    border: 1px solid var(--cor-4);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(36, 21, 14, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    box-shadow: 0 6px 15px rgba(36, 21, 14, 0.4);
+  }
+  
+  /* ===== Título ===== */
+  h3 {
+    color: var(--cor-2);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* ===== Inputs ===== */
+  .form-control {
+    background-color: #fff;
+    border: 1px solid var(--cor-4);
+    border-radius: 8px;
+    color: var(--cor-1);
+    transition: all 0.2s ease;
+  }
+  
+  .form-control:focus {
+    border-color: var(--cor-3);
+    box-shadow: 0 0 4px var(--cor-3);
+  }
+  
+  /* ===== Botão Entrar ===== */
+  .btn-success {
+    background-color: var(--cor-3);
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-success:hover {
+    background-color: var(--cor-2);
+  }
+  
+  /* ===== Texto e Links ===== */
+  p {
+    color: var(--cor-2);
+    font-size: 0.95rem;
+  }
+  
+  a {
+    color: var(--cor-3);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  a:hover {
+    color: var(--cor-2);
+    text-decoration: underline;
+  }
+  
+  /* ===== Mensagens de Erro ===== */
+  .text-danger small {
+    color: #a94442;
+    font-size: 0.85rem;
+  }
+  
+  /* ===== Responsividade ===== */
+  @media (max-width: 768px) {
+    .card {
+      width: 90%;
+      padding: 2rem 1rem;
+    }
+  }
