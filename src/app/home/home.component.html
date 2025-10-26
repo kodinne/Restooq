@@ -24,7 +24,7 @@
       <p>O REStooq é um sistema ERP pensado para pequenas e médias empresas. Centralize gestão de estoque, vendas, compras,
         clientes e relatórios em uma única plataforma, com interface simples, segura e orientada a resultados.</p>
       <ul class="intro-features">
-        <li>Controle de estoque e movimentações</li>
+        <li>Controle de estoque e movimentações</li> 
         <li>PDV integrado e emissão de documentos</li>
         <li>Relatórios</li>
         <li>Gestão de usuários e permissões</li>
@@ -32,22 +32,33 @@
     </section>
 
     <main class="home-main container" role="main">
-      <div class="home-cards">
+      <!-- Cards centralizados, lado a lado -->
+      <div class="home-cards" role="region" aria-label="Ações principais">
         <article class="card" aria-labelledby="cadastro-title">
-          <h2 id="cadastro-title">Cadastro</h2>
-          <p>Crie sua conta para acessar todos os recursos da plataforma.</p>
-          <a routerLink="/register" class="btn btn-primary" aria-label="Ir para cadastro">Criar conta</a>
+          <div class="card-body">
+            <h2 id="cadastro-title">Cadastro</h2>
+            <p>Crie sua conta para acessar todos os recursos da plataforma.</p>
+          </div>
+          <div class="card-actions">
+            <a routerLink="/register" class="btn btn-primary" aria-label="Ir para cadastro">Criar conta</a>
+          </div>
         </article>
 
         <article class="card" aria-labelledby="login-title">
-          <h2 id="login-title">Login</h2>
-          <p>Já tem uma conta? Entre com seu usuário e senha para continuar.</p>
-          <a routerLink="/login" class="btn btn-primary" aria-label="Ir para login">Entrar</a>
+          <div class="card-body">
+            <h2 id="login-title">Login</h2>
+            <p>Já tem uma conta? Entre com seu usuário e senha para continuar.</p>
+          </div>
+          <div class="card-actions">
+            <a routerLink="/login" class="btn btn-primary" aria-label="Ir para login">Entrar</a>
+          </div>
         </article>
       </div>
 
-      <p class="help-text">Problemas para entrar? <a routerLink="/forgot-password">Recupere sua senha</a> ou <a
-          routerLink="/help">entre em contato</a>.</p>
+      <!-- Links auxiliares alinhados abaixo dos cards -->
+      <div class="help-text">
+        Problemas para entrar? <a routerLink="/forgot-password">Recupere sua senha</a> ou <a routerLink="/help">entre em contato</a>.
+      </div>
     </main>
 
     <footer class="home-footer">
