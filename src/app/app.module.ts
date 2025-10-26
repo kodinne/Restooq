@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,10 +15,8 @@ import { SobreComponent } from './sobre/sobre.component';
 import { FaqComponent } from './faq/faq.component';
 import { ContatoComponent } from './contato/contato.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderModule } from './shared/header/header.module';
 import { FooterModule } from './shared/footer/footer.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -32,11 +33,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   imports: [
     BrowserModule,
+    RouterModule,
+    AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     HeaderModule,
     FooterModule,
-    AppRoutingModule,
     NgbModule
   ],
   providers: [],
