@@ -6,15 +6,13 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  phone: string;
-  password: string;
+  password?: string;
 }
 
 //Data Transfer Object
 export interface CreateUserDto{
   name: string;
   email: string;
-  phone: string;
   password: string;
 }
 
@@ -58,7 +56,7 @@ export class UserService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  register(body: any): Observable<any>{
+  register(body: CreateUserDto): Observable<any>{
     return this.http.post<any>(`${this.apiUrl}`, body);
   }
 

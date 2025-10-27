@@ -1,0 +1,16 @@
+<div class="page">
+  <header class="page-header">
+    <div class="title">New Product</div>
+  </header>
+  <div class="panel">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+      <label>SKU<input formControlName="sku" /></label>
+      <label>Name<input formControlName="name" /></label>
+      <label>Category<input formControlName="category" /></label>
+      <label>Price<input type="number" step="0.01" formControlName="price" /></label>
+      <label>Stock<input type="number" formControlName="stock" /></label>
+      <div class="actions"><button class="btn primary" [disabled]="form.invalid || loading">Save</button></div>
+    </form>
+  </div>
+</div>
+

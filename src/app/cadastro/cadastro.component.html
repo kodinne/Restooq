@@ -1,56 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cadastre-se</title>
-  </head>
-  <body>
-    <h1>Crie sua conta</h1>
+<app-public-header></app-public-header>
+<div class="auth">
+  <div class="illustration"></div>
+  <div class="form-card">
+    <h2><i class="bi bi-person-plus"></i> Criar conta</h2>
+    <p class="subtitle">Gerencie seu inventÃ¡rio com eficiÃªncia</p>
 
-    <form action="/cadastrar" method="POST">
-      <label for="nome">Nome completo:</label><br />
-      <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required /><br /><br />
-
-      <label for="email">E-mail:</label><br />
-      <input
-        type="email"
-        id="email"
-        name="emaila"
-        placeholder="exemplo@dominio.com"
-        required
-      /><br /><br />
-
-      <label for="telefone">Telefone:</label><br />
-      <input
-        type="tel"
-        id="telefone"
-        name="telefone"
-        placeholder="(xx) xxxxx-xxxx"
-        required
-      /><br /><br />
-
-      <label for="senha">Senha:</label><br />
-      <input
-        type="password"
-        id="senha"
-        name="senha"
-        placeholder="Crie uma senha"
-        required
-      /><br /><br />
-
-      <label for="confirmarSenha">Confirmar senha:</label><br />
-      <input
-        type="password"
-        id="confirmarSenha"
-        name="confirmarSenha"
-        placeholder="Repita a senha"
-        required
-      /><br /><br />
-
-      <button type="submit">Cadastrar</button>
+    <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="grid">
+      <label>Nome completo<input formControlName="nome" placeholder="Digite seu nome" /></label>
+      <label>Email<input type="email" formControlName="email" placeholder="Digite seu email" /></label>
+      <label>Senha<input type="password" formControlName="senha" placeholder="Mínimo 6 caracteres" /></label>
+      <label>Confirmar senha<input type="password" formControlName="confirmarSenha" placeholder="Repita a senha" /></label>
+      <div class="actions"><button class="btn primary" [disabled]="cadastroForm.invalid">Cadastrar</button></div>
     </form>
 
-    <p>JÃ¡ tem uma conta? <a href="login.html">Entrar</a></p>
-  </body>
-</html>
+    <p class="alt">Já tem uma conta? <a routerLink="/login">Entrar</a></p>
+  </div>
+</div>
+

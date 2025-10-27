@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -10,10 +11,12 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  submitting = false;
+  errorMsg: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
-      login: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
@@ -28,16 +31,22 @@ export class LoginComponent {
       return;
     }
 
-    const { login, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
 
     // Aqui você envia para seu serviço de autenticação
-    this.authService.login( login, password ).subscribe({
+    this.authService.login( (email || '').trim().toLowerCase(), password ).subscribe({
       next: (res: any) => {
-        console.log('Login bem-sucedido!', res);
+        localStorage.setItem('token', res?.access_token);
+        if (res?.user?.name) { localStorage.setItem('userName', res.user.name); }
+        this.router.navigate(['/dashboard']);
+        this.submitting = false;
       },
       error: (err: any) => {
         console.error('Erro no login:', err);
+        this.errorMsg = err?.error?.message || 'Usu�rio ou senha inv�lidos.';
+        this.submitting = false;
       },
     });
   }
 }
+

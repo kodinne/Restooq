@@ -1,0 +1,11 @@
+.auth{ display:grid; grid-template-columns: 1.2fr 1fr; gap:24px; padding:24px; align-items:center; min-height: calc(100vh - 48px); background:#f5f7fb; }
+.illustration{ background: linear-gradient(135deg,#ffe7f3,#e9f0ff); border-radius:16px; height:420px; }
+.form-card{ background:#fff; border-radius:16px; padding:24px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+.subtitle{ color:#6b7a90; margin-top:-4px; margin-bottom:12px; }
+.grid{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+label{ display:flex; flex-direction:column; color:#6b7a90; }
+input{ border:1px solid #e6eaf2; border-radius:8px; padding:10px; }
+.actions{ grid-column: 1 / -1; display:flex; justify-content:flex-end; }
+.btn{ padding:10px 14px; border-radius:8px; background:#eef1f6; border:none; }
+.btn.primary{ background:#0f1d40; color:#fff; }
+@media (max-width: 992px){ .auth{ grid-template-columns: 1fr; } }

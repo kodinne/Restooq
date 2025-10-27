@@ -25,13 +25,6 @@ export class CadastroComponent implements OnInit {
       {
         nome: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
-        telefone: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(/^\(\d{2}\)\s\d{4,5}-\d{4}$/),
-          ],
-        ], // Exemplo de regex para (xx) xxxxx-xxxx
         senha: ['', [Validators.required, Validators.minLength(6)]],
         confirmarSenha: ['', [Validators.required]],
       },
@@ -69,9 +62,9 @@ export class CadastroComponent implements OnInit {
       return;
     }
 
-    const { nome, email, telefone, senha } = this.cadastroForm.value;
+    const { nome, email, senha } = this.cadastroForm.value;
 
-    this.userService.register({ nome, email, telefone, senha }).subscribe({
+    this.userService.register({ name: nome, email, password: senha }).subscribe({
       next: (response) => {
         console.log('Cadastro realizado com sucesso!', response);
         this.router.navigate(['/login']); // Exemplo: Redireciona para /login

@@ -1,0 +1,54 @@
+<div class="page">
+  <header class="page-header">
+    <div class="title">Pedidos</div>
+    <div class="actions">
+      <button class="btn" disabled>Exportar para Excel</button>
+      <button class="btn" disabled>Importar pedidos</button>
+      <a class="btn primary" routerLink="/orders/new">+ Novo Pedido</a>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <input placeholder="Buscar por cliente, destino ou #ID" [(ngModel)]="q" (keyup.enter)="page=1; load()" />
+    <div class="filters">
+      <select [(ngModel)]="status" (change)="page=1; load()">
+        <option value="">Todos</option>
+        <option value="pending">Pendente</option>
+        <option value="completed">Concluído</option>
+      </select>
+      <button class="btn" (click)="page=1; load()">Filtrar</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Data</th>
+          <th>Cliente</th>
+          <th>Canal de vendas</th>
+          <th>Destino</th>
+          <th>Itens</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let o of list">
+          <td>#{{o.id}}</td>
+          <td>{{o.createdAt | date:'dd/MM/yyyy'}}</td>
+          <td>{{o.customer?.name || '-'}}</td>
+          <td>{{o.salesChannel}}</td>
+          <td>{{o.destination}}</td>
+          <td>{{o.items.length}}</td>
+          <td><span class="badge" [class.completed]="o.status==='completed'" [class.pending]="o.status==='pending'">{{ o.status==='completed' ? 'Concluído' : 'Pendente' }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button class="btn" (click)="changePage(page-1)">Anterior</button>
+      <span>Página {{page}} de {{ pagesTotal() }}</span>
+      <button class="btn" (click)="changePage(page+1)">Próxima</button>
+    </div>
+  </div>
+</div>

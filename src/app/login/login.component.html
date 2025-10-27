@@ -1,61 +1,34 @@
-<app-header></app-header>
-<div class="container mt-5">
-  <div class="card shadow-sm col-md-6 mx-auto p-4">
-    <h3 class="text-center mb-3">Login</h3>
+<app-public-header></app-public-header>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <!-- Campo de Login -->
-      <div class="mb-3">
-        <label>Nome de Login</label>
-        <input
-          type="text"
-          formControlName="login"
-          placeholder="Seu nome de login"
-          class="form-control"
-        />
-        <div
-          class="text-danger mt-1"
-          *ngIf="f['login']?.invalid && f['login']?.touched"
-        >
-          <small *ngIf="f['login']?.errors?.['required']">
-            O nome de login é obrigatório
-          </small>
-          <small *ngIf="f['login']?.errors?.['minlength']">
-            Mínimo de 3 caracteres
-          </small>
-        </div>
+<div class="auth auth-center">
+  <div class="form-card">
+    <h2><i class="bi bi-box-arrow-in-right"></i> Entrar</h2>
+    <p class="subtitle">Acesse seu painel com e-mail e senha.</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="grid">
+      <label>Email
+        <input id="loginInput" type="email" formControlName="email" placeholder="seu@email.com" />
+        <small class="error" *ngIf="f['email']?.touched && f['email']?.errors?.['required']">Email  obrigatório</small>
+        <small class="error" *ngIf="f['email']?.touched && f['email']?.errors?.['email']">Email inválido</small>
+      </label>
+
+      <label>Senha
+        <input id="passwordInput" type="password" formControlName="password" placeholder="mínimo 6 caracteres" />
+        <small class="error" *ngIf="f['password']?.touched && f['password']?.errors?.['required']">Senha  obrigatória</small>
+        <small class="error" *ngIf="f['password']?.touched && f['password']?.errors?.['minlength']">Minimo de 6 caracteres</small>
+      </label>
+
+      <div class="actions">
+        <button class="btn primary" [disabled]="loginForm.invalid || submitting">
+          <span *ngIf="!submitting">Entrar</span>
+          <span *ngIf="submitting"><i class="bi bi-arrow-repeat"></i> Entrando...</span>
+        </button>
       </div>
-
-      <!-- Campo de Senha -->
-      <div class="mb-3">
-        <label>Senha</label>
-        <input
-          type="password"
-          formControlName="password"
-          placeholder="*******"
-          class="form-control"
-        />
-        <div
-          class="text-danger mt-1"
-          *ngIf="f['password']?.invalid && f['password']?.touched"
-        >
-          <small *ngIf="f['password']?.errors?.['required']">
-            A senha é obrigatória
-          </small>
-          <small *ngIf="f['password']?.errors?.['minlength']">
-            Mínimo de 6 caracteres
-          </small>
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-success w-100 mt-3">
-        Entrar
-      </button>
     </form>
 
-    <p class="text-center mt-3">
-      Não tem conta?
-      <a routerLink="/register">Cadastre-se</a>
-    </p>
+    <p class="error" *ngIf="errorMsg">{{errorMsg}}</p>
+    <p class="alt">Não tem conta? <a routerLink="/cadastro">Cadastre-se</a></p>
   </div>
 </div>
+
+

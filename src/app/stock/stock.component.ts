@@ -1,0 +1,17 @@
+import { Component, OnInit } from '@angular/core';
+import { ProductsService, Product } from '../services/products.service';
+
+@Component({
+  selector: 'app-stock',
+  templateUrl: './stock.component.html',
+  styleUrls: ['./stock.component.scss']
+})
+export class StockComponent implements OnInit {
+  products: Product[] = [];
+  total = 0; page = 1; limit = 10; q = ''; status = '';
+  constructor(private svc: ProductsService) {}
+  ngOnInit(): void { this.load(); }
+  load(){ this.svc.list({ page: this.page, limit: this.limit, q: this.q || undefined, status: this.status || undefined }).subscribe(res => { this.products = res.items; this.total = res.total; this.page = res.page; this.limit = res.limit; }); }
+  changePage(p: number){ if (p<1) return; const max = Math.ceil(this.total/this.limit)||1; if (p>max) return; this.page = p; this.load(); }
+  pagesTotal(){ return Math.ceil(this.total/this.limit) || 1; }
+}

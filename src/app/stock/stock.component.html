@@ -1,0 +1,41 @@
+<div class="page">
+  <header class="page-header">
+    <div class="title">Em estoque</div>
+    <a class="btn primary" routerLink="/products/new">+ Novo Produto</a>
+  </header>
+
+  <div class="toolbar">
+    <input placeholder="Buscar por SKU, nome ou categoria" [(ngModel)]="q" (keyup.enter)="page=1; load()" />
+    <select [(ngModel)]="status" (change)="page=1; load()">
+      <option value="">Todos</option>
+      <option value="active">Ativo</option>
+      <option value="inactive">Inativo</option>
+    </select>
+    <button class="btn" (click)="page=1; load()">Filtrar</button>
+  </div>
+
+  <div class="panel">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>SKU</th><th>Produto</th><th>Categoria</th><th>Instrução</th><th>Itens</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products">
+          <td>#{{p.id}}</td>
+          <td>{{p.name}}</td>
+          <td>{{p.category || '-'}}</td>
+          <td>Ajuste de estoque</td>
+          <td>{{p.stock}}</td>
+          <td><span class="badge" [class.completed]="p.status==='active'" [class.pending]="p.stock<=5">{{ p.stock<=5 ? 'Pendente' : 'Concluído' }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button class="btn" (click)="changePage(page-1)">Anterior</button>
+      <span>Página {{page}} de {{ pagesTotal() }}</span>
+      <button class="btn" (click)="changePage(page+1)">Próxima</button>
+    </div>
+  </div>
+</div>

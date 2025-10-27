@@ -15,4 +15,21 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login`, payload);
   }
 
+  getUserName(): string | null {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    try {
+      const [, payload] = token.split('.');
+      const json = JSON.parse(atob(payload));
+      return json?.name || json?.email || null;
+    } catch {
+      return null;
+    }
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userName');
+  }
+
 }

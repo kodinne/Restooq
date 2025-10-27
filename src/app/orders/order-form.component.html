@@ -1,0 +1,30 @@
+<div class="page">
+  <header class="page-header">
+    <div class="title">New Order</div>
+  </header>
+  <div class="panel">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+      <label>Customer
+        <select formControlName="customerId">
+          <option *ngIf="!customers.length" [value]="1">Cliente padrão (#1)</option>
+          <option *ngFor="let c of customers" [value]="c.id">{{c.name}} ({{c.email}})</option>
+        </select>
+      </label>
+
+      <div class="items" formArrayName="items">
+        <div class="item" *ngFor="let it of items.controls; let i = index" [formGroupName]="i">
+          <select formControlName="productId">
+            <option *ngFor="let p of products" [value]="p.id">{{p.name}} ({{p.stock}})</option>
+          </select>
+          <input type="number" min="1" formControlName="quantity" />
+          <button type="button" class="btn" (click)="removeItem(i)">Remove</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn" (click)="addItem()">+ Item</button>
+        <button class="btn primary" [disabled]="form.invalid || loading">Save Order</button>
+      </div>
+    </form>
+  </div>
+</div>

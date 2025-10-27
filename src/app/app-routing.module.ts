@@ -8,19 +8,33 @@ import { LoginComponent } from './login/login.component';
 import { ProdutosCadastradosComponent } from './produtos-cadastrados/produtos-cadastrados.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { CadastroProdutoComponent } from './cadastro-produto/cadastro-produto.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { OrdersComponent } from './orders/orders.component';
+import { StockComponent } from './stock/stock.component';
+import { ShellComponent } from './shared/shell/shell.component';
+import { ProductFormComponent } from './products/product-form.component';
+import { OrderFormComponent } from './orders/order-form.component';
 
 const routes: Routes = [
-{path:"", component:HomeComponent},
-{path:"home", component:HomeComponent},
-{path:"contato", component:ContatoComponent},
-{path:"faq", component:FaqComponent},
-{path:"sobre", component:SobreComponent},
-{path:"login", component:LoginComponent},
-{path:"produtos-cadastrados", component:ProdutosCadastradosComponent},
-{path:"cadastro", component:CadastroComponent},
-{path:"cadastro-produto", component:CadastroProdutoComponent},
+  // Páginas públicas (fora do shell da dashboard)
+  { path:"home", component:HomeComponent },
+  { path:"contato", component:ContatoComponent },
+  { path:"faq", component:FaqComponent },
+  { path:"sobre", component:SobreComponent },
+  { path:"login", component:LoginComponent },
+  { path:"cadastro", component:CadastroComponent },
 
-
+  // Área autenticada (shell com sidebar/topbar)
+  { path: '', component: ShellComponent, children: [
+    { path:"", redirectTo:"dashboard", pathMatch:"full" },
+    { path:"dashboard", component:DashboardComponent },
+    { path:"orders", component:OrdersComponent },
+    { path:"orders/new", component: OrderFormComponent },
+    { path:"stock", component:StockComponent },
+    { path:"products/new", component: ProductFormComponent },
+    { path:"produtos-cadastrados", component:ProdutosCadastradosComponent },
+    { path:"cadastro-produto", component:CadastroProdutoComponent }
+  ]},
 ];
 
 @NgModule({
