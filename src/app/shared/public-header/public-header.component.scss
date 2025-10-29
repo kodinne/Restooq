@@ -1,10 +1,10 @@
-.public-header{ background:#ffffff; border-bottom:1px solid #eef1f6; position:sticky; top:0; z-index:10; }
+.public-header{ background:var(--coffee-900); border-bottom:1px solid var(--panel-border); position:sticky; top:0; z-index:10; }
 .public-header .container{ max-width: 1200px; margin:0 auto; padding:12px 16px; display:flex; align-items:center; gap:16px; }
-.brand .logo{ font-weight:800; font-size:20px; color:#0f1d40; text-decoration:none; }
+.brand .logo{ font-weight:800; font-size:20px; color:#EEDFD2; text-decoration:none; }
 .nav{ margin-left:auto; display:flex; gap:12px; }
-.nav a{ color:#6b7a90; text-decoration:none; padding:8px 10px; border-radius:8px; }
-.nav a.active, .nav a:hover{ background:#f5f7fb; color:#0f1d40; }
+.nav a{ color:#d6c7bb; text-decoration:none; padding:8px 10px; border-radius:8px; }
+.nav a.active, .nav a:hover{ background:#3B2A20; color:#fff; }
 .actions{ display:flex; gap:8px; margin-left:12px; }
-.btn{ padding:8px 12px; border-radius:8px; background:#eef1f6; color:#0f1d40; text-decoration:none; }
-.btn.primary{ background:#5a6ff2; color:#fff; }
+.btn{ padding:8px 12px; border-radius:8px; background:#2a1c14; border:1px solid var(--panel-border); color:#E8E6E1; text-decoration:none; }
+.btn.primary{ background:var(--coffee-500); color:#fff; }
 

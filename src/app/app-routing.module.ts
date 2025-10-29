@@ -13,6 +13,7 @@ import { OrdersComponent } from './orders/orders.component';
 import { StockComponent } from './stock/stock.component';
 import { ShellComponent } from './shared/shell/shell.component';
 import { ProductFormComponent } from './products/product-form.component';
+import { PdvComponent } from './pdv/pdv.component';
 import { OrderFormComponent } from './orders/order-form.component';
 
 const routes: Routes = [
@@ -32,6 +33,8 @@ const routes: Routes = [
     { path:"orders/new", component: OrderFormComponent },
     { path:"stock", component:StockComponent },
     { path:"products/new", component: ProductFormComponent },
+    { path:"products/:id/edit", component: ProductFormComponent },
+    { path:"pdv", component: PdvComponent },
     { path:"produtos-cadastrados", component:ProdutosCadastradosComponent },
     { path:"cadastro-produto", component:CadastroProdutoComponent }
   ]},

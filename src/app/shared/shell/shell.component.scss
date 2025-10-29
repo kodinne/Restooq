@@ -2,14 +2,14 @@
   display: grid;
   grid-template-columns: 72px 1fr;
   min-height: 100vh;
-  background: #f5f7fb;
+  background: var(--paper);
   transition: grid-template-columns 0.2s ease;
 }
 .layout.collapsed {
   grid-template-columns: 0 1fr;
 }
 .sidebar {
-  background: #121a2b;
+  background: var(--coffee-900);
   color: #fff;
   padding: 12px 0;
   display: flex;
@@ -23,32 +23,36 @@
 .sidebar .menu a {
   display: block;
   padding: 12px;
-  color: #9fb3c8;
+  color: #d6c7bb;
   text-decoration: none;
   margin: 8px 0;
   border-radius: 8px;
 }
 .sidebar .menu a.active,
 .sidebar .menu a:hover {
-  background: #243149;
+  background: var(--coffee-800);
   color: #fff;
 }
 .content {
   padding: 16px 24px;
 }
 .topbar {
-  background: #fff;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
   border-radius: 12px;
   padding: 12px;
   display: flex;
   gap: 12px;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
   margin-bottom: 16px;
+  color: var(--ink);
 }
 .topbar .search {
-  border: 1px solid #e6eaf2;
+  background: #1b120d;
+  color: var(--ink);
+  border: 1px solid var(--panel-border);
   border-radius: 24px;
   padding: 10px 16px;
   width: 280px;
@@ -59,7 +63,7 @@
   font-size: 22px;
   line-height: 1;
   padding: 6px;
-  color: #0f1d40;
+  color: var(--ink);
 }
 .username {
   margin-right: 8px;

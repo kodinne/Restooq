@@ -30,4 +30,12 @@ export class ProductsService {
   create(body: Partial<Product>): Observable<Product> {
     return this.http.post<Product>(this.apiUrl, body);
   }
+
+  getById(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/${id}`);
+  }
+
+  update(id: number, body: Partial<Product>): Observable<Product> {
+    return this.http.patch<Product>(`${this.apiUrl}/${id}`, body);
+  }
 }

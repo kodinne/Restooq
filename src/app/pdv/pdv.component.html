@@ -1,1 +1,53 @@
+<div class="page">
+  <header class="page-header">
+    <div class="title">PDV</div>
+  </header>
 
+  <div class="pdv-grid">
+    <div class="panel">
+      <div class="form-row">
+        <select class="customer" [formControl]="form.controls.customerId">
+          <option *ngFor="let c of customers" [value]="c.id">{{c.name}}</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <input placeholder="SKU ou nome do produto" [formControl]="form.controls.skuOrName" (keyup.enter)="addItem()">
+        <input type="number" min="1" [formControl]="form.controls.quantity" (keyup.enter)="addItem()" class="qty">
+        <button class="btn primary" (click)="addItem()" [disabled]="loading">Adicionar</button>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Qtd</th>
+            <th>Preço</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cart; let i = index">
+            <td>{{item.product.name}}</td>
+            <td>
+              <div class="qty-ctrl">
+                <button class="btn" (click)="decrease(i)">-</button>
+                <span>{{item.quantity}}</span>
+                <button class="btn" (click)="increase(i)">+</button>
+              </div>
+            </td>
+            <td>{{item.product.price | currency:'BRL'}}</td>
+            <td>{{(item.product.price * item.quantity) | currency:'BRL'}}</td>
+            <td><button class="btn" (click)="removeItem(i)"><i class="bi bi-trash"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel summary">
+      <div class="row"><span class="label">Itens</span><span class="value">{{cart.length}}</span></div>
+      <div class="row"><span class="label">Total</span><span class="value">{{ total | currency:'BRL' }}</span></div>
+      <button class="btn primary w-100" (click)="checkout()" [disabled]="!cart.length || loading">Finalizar</button>
+    </div>
+  </div>
+</div>

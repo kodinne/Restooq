@@ -18,17 +18,19 @@
     <table class="table">
       <thead>
         <tr>
-          <th>SKU</th><th>Produto</th><th>Categoria</th><th>Instrução</th><th>Itens</th><th>Status</th>
+          <th>SKU</th><th>Produto</th><th>Categoria</th><th>Instrução</th><th>Itens</th><th>Status</th><th>Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let p of products">
           <td>#{{p.id}}</td>
           <td>{{p.name}}</td>
-          <td>{{p.category || '-'}}</td>
+          <td>{{p.category || '-'}}
+          </td>
           <td>Ajuste de estoque</td>
           <td>{{p.stock}}</td>
           <td><span class="badge" [class.completed]="p.status==='active'" [class.pending]="p.stock<=5">{{ p.stock<=5 ? 'Pendente' : 'Concluído' }}</span></td>
+          <td><a class="btn" [routerLink]="['/products', p.id, 'edit']">Editar</a></td>
         </tr>
       </tbody>
     </table>

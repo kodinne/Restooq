@@ -1,0 +1,13 @@
+{
+  "users": [
+    { "id": 1, "name": "Admin", "email": "admin@example.com", "password": "admin" },
+    { "id": 2, "name": "Cliente Demo", "email": "cliente@example.com", "password": "123456" }
+  ],
+  "products": [
+    { "id": 1, "sku": "SKU-001", "name": "Café Expresso", "category": "Bebidas", "price": 7.5, "stock": 20, "status": "active" },
+    { "id": 2, "sku": "SKU-002", "name": "Cappuccino", "category": "Bebidas", "price": 12.9, "stock": 15, "status": "active" },
+    { "id": 3, "sku": "SKU-003", "name": "Croissant", "category": "Padaria", "price": 8.0, "stock": 8, "status": "active" },
+    { "id": 4, "sku": "SKU-004", "name": "Cookie", "category": "Doces", "price": 5.5, "stock": 50, "status": "active" }
+  ],
+  "orders": []
+}
