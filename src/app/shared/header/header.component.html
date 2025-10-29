@@ -1,8 +1,6 @@
-  <header
-    class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom"
-  >
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
     <a
-      href="/"
+      routerLink="/home"
       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
     >
       <svg class="bi me-2" width="40" height="32" aria-hidden="true">
@@ -12,11 +10,34 @@
     </a>
     <ul class="nav nav-pills">
       <li class="nav-item">
-        <a href="#" class="nav-link active" aria-current="page">Home</a>
+        <a
+          class="nav-link"
+          routerLink="/home"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          aria-current="page"
+          >Home</a
+        >
       </li>
-      <li class="nav-item"><a href="#" class="nav-link">Produtos</a></li>
-      <li class="nav-item"><a href="#" class="nav-link">Sobre</a></li>
-      <li class="nav-item"><a href="#" class="nav-link">FAQ</a></li>
-      <li class="nav-item"><a href="/contato" class="nav-link">Contato</a></li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/produtos-cadastrados" routerLinkActive="active"
+          >Produtos</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/pdv" routerLinkActive="active">PDV</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/sobre" routerLinkActive="active">Sobre</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/faq" routerLinkActive="active">FAQ</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/contato" routerLinkActive="active">Contato</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+      </li>
     </ul>
   </header>

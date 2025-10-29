@@ -8,23 +8,24 @@ import { LoginComponent } from './login/login.component';
 import { ProdutosCadastradosComponent } from './produtos-cadastrados/produtos-cadastrados.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { CadastroProdutoComponent } from './cadastro-produto/cadastro-produto.component';
+import { PdvComponent } from './pdv/pdv.component';
 
 const routes: Routes = [
-{path:"", component:HomeComponent},
-{path:"home", component:HomeComponent},
-{path:"contato", component:ContatoComponent},
-{path:"faq", component:FaqComponent},
-{path:"sobre", component:SobreComponent},
-{path:"login", component:LoginComponent},
-{path:"produtos-cadastrados", component:ProdutosCadastradosComponent},
-{path:"cadastro", component:CadastroComponent},
-{path:"cadastro-produto", component:CadastroProdutoComponent},
-
-
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
+  { path: 'contato', component: ContatoComponent },
+  { path: 'faq', component: FaqComponent },
+  { path: 'sobre', component: SobreComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'produtos-cadastrados', component: ProdutosCadastradosComponent },
+  { path: 'cadastro', component: CadastroComponent },
+  { path: 'cadastro-produto', component: CadastroProdutoComponent },
+  { path: 'pdv', component: PdvComponent },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

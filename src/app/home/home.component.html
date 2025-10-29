@@ -1,32 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <header>
-        <img src="" alt="">
-        <h1>RESt</h1>
-    </header>
+<div class="container py-5">
+  <div class="text-center mb-4">
+    <h1 class="display-6">Bem-vindo</h1>
+    <p class="text-body-secondary">
+      Para utilizar nossos serviços, faça seu cadastro ou login.
+    </p>
+  </div>
 
-        <h1>Para Utilização dos nossos serviços exigimos realização de seu Cadastro/Login.</h1>
-
-    <main class="container">
-        <div class="card">
-          <h2>Cadastro</h2>
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5">Cadastro</h2>
           <p>Crie sua conta para acessar todos os nossos serviços e funcionalidades.</p>
-          <a href="../cadastro-usuario/cadastro-usuario.html" class="btn">Cadastrar-se</a>
+          <a routerLink="/cadastro" class="btn btn-primary">Cadastrar-se</a>
         </div>
-    
-        <div class="card">
-          <h2>Login</h2>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5">Login</h2>
           <p>Já possui uma conta? Entre com seu usuário e senha para continuar.</p>
-          <a href="../login/login.html" class="btn">Entrar</a>
+          <a routerLink="/login" class="btn btn-success">Entrar</a>
         </div>
-
-      </main>
-    
-</body>
-</html>
+      </div>
+    </div>
+  </div>
+</div>

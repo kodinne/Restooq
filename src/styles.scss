@@ -1,4 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Theme overrides (must come before Bootstrap import) */
+$primary: #6c5ce7; /* Indigo vibe */
+$secondary: #6c757d;
+$success: #198754;
+$body-bg: #f8f9fb;
+$body-color: #212529;
+
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+/* Base tweaks */
+:root {
+  scroll-behavior: smooth;
+}
+
+main {
+  min-height: 60vh;
+}
+
+header .nav-link.active {
+  color: #fff;
+}
