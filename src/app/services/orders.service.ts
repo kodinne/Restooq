@@ -2,15 +2,26 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface OrderItem { productId: number; quantity: number; }
+export interface OrderItem { 
+  productId: number; 
+  productName?: string;
+  quantity: number;
+  unitPrice?: number;
+  subtotal?: number;
+}
+
 export interface Order {
   id: number;
+  customerId: number;
+  customerName: string;
+  date: string;
   createdAt: string;
   salesChannel: string;
   destination: string;
   status: string;
+  total: number;
   customer?: { id: number; name: string; email: string };
-  items: { quantity: number; product: { name: string; price: number } }[];
+  items: OrderItem[];
 }
 
 @Injectable({ providedIn: 'root' })

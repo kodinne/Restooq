@@ -1,11 +1,346 @@
-.auth{ display:grid; grid-template-columns: 1.2fr 1fr; gap:24px; padding:24px; align-items:center; min-height: calc(100vh - 48px); background:#f5f7fb; }
-.illustration{ background: linear-gradient(135deg,#ffe7f3,#e9f0ff); border-radius:16px; height:420px; }
-.form-card{ background:#fff; border-radius:16px; padding:24px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
-.subtitle{ color:#6b7a90; margin-top:-4px; margin-bottom:12px; }
-.grid{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-label{ display:flex; flex-direction:column; color:#6b7a90; }
-input{ border:1px solid #e6eaf2; border-radius:8px; padding:10px; }
-.actions{ grid-column: 1 / -1; display:flex; justify-content:flex-end; }
-.btn{ padding:10px 14px; border-radius:8px; background:#eef1f6; border:none; }
-.btn.primary{ background:#0f1d40; color:#fff; }
-@media (max-width: 992px){ .auth{ grid-template-columns: 1fr; } }
+.cadastro-page {
+  min-height: 100vh;
+  background: var(--bege-claro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.cadastro-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1100px;
+  width: 100%;
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+// COLUNA ESQUERDA: ILUSTRAÇÃO
+.cadastro-illustration {
+  background: linear-gradient(135deg, var(--marrom-rosado-caramelo) 0%, var(--marrom-acinzentado) 100%);
+  color: var(--marrom-escuro);
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+  
+  .illustration-content {
+    position: relative;
+    z-index: 1;
+    
+    .coffee-icon {
+      margin-bottom: 32px;
+      
+      .cadastro-logo {
+        height: 100px;
+        width: auto;
+      }
+    }
+    
+    h2 {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: white;
+    }
+    
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+      opacity: 0.95;
+    }
+    
+    .benefits-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      
+      .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 15px;
+        
+        i {
+          font-size: 20px;
+          color: #74c69d;
+        }
+      }
+    }
+  }
+}
+
+// COLUNA DIREITA: FORMULÁRIO
+.cadastro-form-section {
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 100vh;
+  overflow-y: auto;
+  
+  .form-wrapper {
+    width: 100%;
+    max-width: 400px;
+    
+    .form-header {
+      text-align: center;
+      margin-bottom: 32px;
+      
+      i {
+        font-size: 48px;
+        color: #6B4423;
+        display: block;
+        margin-bottom: 16px;
+      }
+      
+      h1 {
+        font-size: 28px;
+        font-weight: 800;
+        color: #0f1d40;
+        margin-bottom: 8px;
+      }
+      
+      p {
+        color: #6b7a90;
+        font-size: 15px;
+        margin: 0;
+      }
+    }
+    
+    .cadastro-form {
+      .form-group {
+        margin-bottom: 20px;
+        
+        label {
+          display: block;
+          color: #0f1d40;
+          font-weight: 600;
+          font-size: 14px;
+          margin-bottom: 8px;
+          
+          i {
+            color: #6B4423;
+            margin-right: 6px;
+          }
+        }
+        
+        input {
+          width: 100%;
+          padding: 12px 16px;
+          border: 2px solid #e6eaf2;
+          border-radius: 12px;
+          font-size: 15px;
+          color: #0f1d40;
+          transition: all 0.2s ease;
+          
+          &:focus {
+            outline: none;
+            border-color: #6B4423;
+            box-shadow: 0 0 0 3px rgba(107, 68, 35, 0.1);
+          }
+          
+          &::placeholder {
+            color: #9fb3c8;
+          }
+          
+          &.error {
+            border-color: #e74c3c;
+          }
+        }
+        
+        .error-msg {
+          display: block;
+          color: #e74c3c;
+          font-size: 12px;
+          margin-top: 6px;
+          font-weight: 500;
+        }
+      }
+      
+      .terms {
+        margin-bottom: 20px;
+        
+        .checkbox-label {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          font-size: 13px;
+          color: #6b7a90;
+          cursor: pointer;
+          line-height: 1.5;
+          
+          input[type="checkbox"] {
+            width: auto;
+            margin-top: 3px;
+            cursor: pointer;
+            flex-shrink: 0;
+          }
+          
+          span {
+            a {
+              color: #6B4423;
+              font-weight: 600;
+              text-decoration: none;
+              
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+      
+      .btn-submit {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #6B4423 0%, #8B6F47 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(107, 68, 35, 0.4);
+        }
+        
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+      
+      .error-alert {
+        margin-top: 16px;
+        padding: 12px;
+        background: rgba(231, 76, 60, 0.1);
+        border: 2px solid #e74c3c;
+        border-radius: 10px;
+        color: #e74c3c;
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        
+        i {
+          font-size: 16px;
+          flex-shrink: 0;
+        }
+      }
+    }
+    
+    .form-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #e6eaf2;
+      
+      p {
+        color: #6b7a90;
+        font-size: 14px;
+        margin: 0;
+      }
+      
+      .login-link {
+        color: #6B4423;
+        font-weight: 700;
+        text-decoration: none;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+// RESPONSIVIDADE
+@media (max-width: 992px) {
+  .cadastro-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .cadastro-illustration {
+    display: none;
+  }
+  
+  .cadastro-form-section {
+    padding: 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .cadastro-page {
+    padding: 0;
+  }
+  
+  .cadastro-container {
+    border-radius: 0;
+    min-height: 100vh;
+  }
+  
+  .cadastro-form-section {
+    padding: 30px 20px;
+    
+    .form-wrapper {
+      .form-header {
+        margin-bottom: 28px;
+        
+        i {
+          font-size: 40px;
+        }
+        
+        h1 {
+          font-size: 24px;
+        }
+      }
+      
+      .cadastro-form {
+        .form-group {
+          margin-bottom: 18px;
+          
+          input {
+            padding: 12px 14px;
+          }
+        }
+      }
+    }
+  }
+}

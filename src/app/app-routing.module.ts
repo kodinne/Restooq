@@ -14,6 +14,7 @@ import { StockComponent } from './stock/stock.component';
 import { ShellComponent } from './shared/shell/shell.component';
 import { ProductFormComponent } from './products/product-form.component';
 import { OrderFormComponent } from './orders/order-form.component';
+import { PdvComponent } from './pdv/pdv.component';
 
 const routes: Routes = [
   // Páginas públicas (fora do shell da dashboard)
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: '', component: ShellComponent, children: [
     { path:"", redirectTo:"dashboard", pathMatch:"full" },
     { path:"dashboard", component:DashboardComponent },
+    { path:"pdv", component:PdvComponent },
     { path:"orders", component:OrdersComponent },
     { path:"orders/new", component: OrderFormComponent },
     { path:"stock", component:StockComponent },

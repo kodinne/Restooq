@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Product {
-  id: number;
+  id?: number;
   sku: string;
   name: string;
   category?: string;
@@ -29,5 +29,9 @@ export class ProductsService {
 
   create(body: Partial<Product>): Observable<Product> {
     return this.http.post<Product>(this.apiUrl, body);
+  }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

@@ -24,25 +24,61 @@
     <table class="table">
       <thead>
         <tr>
-          <th>#</th>
+          <th>#ID</th>
           <th>Data</th>
           <th>Cliente</th>
-          <th>Canal de vendas</th>
-          <th>Destino</th>
+          <th>Total</th>
           <th>Itens</th>
           <th>Status</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let o of list">
-          <td>#{{o.id}}</td>
-          <td>{{o.createdAt | date:'dd/MM/yyyy'}}</td>
-          <td>{{o.customer?.name || '-'}}</td>
-          <td>{{o.salesChannel}}</td>
-          <td>{{o.destination}}</td>
-          <td>{{o.items.length}}</td>
-          <td><span class="badge" [class.completed]="o.status==='completed'" [class.pending]="o.status==='pending'">{{ o.status==='completed' ? 'Concluído' : 'Pendente' }}</span></td>
-        </tr>
+        <ng-container *ngFor="let o of list">
+          <tr>
+            <td><strong>#{{o.id}}</strong></td>
+            <td>{{o.createdAt | date:'dd/MM/yyyy HH:mm'}}</td>
+            <td>{{o.customerName || 'Cliente #' + o.customerId}}</td>
+            <td><strong>{{o.total | currency:'BRL'}}</strong></td>
+            <td>
+              <button class="btn-link" (click)="toggleDetails(o.id)" title="Ver produtos">
+                {{o.items.length || 0}} produto(s)
+                <i class="bi" [class.bi-chevron-down]="!showDetails[o.id]" [class.bi-chevron-up]="showDetails[o.id]"></i>
+              </button>
+            </td>
+            <td><span class="badge" [class.completed]="o.status==='completed'" [class.pending]="o.status==='pending'">{{ o.status==='completed' ? 'Concluído' : 'Pendente' }}</span></td>
+            <td>
+              <button class="btn-icon btn-return" (click)="registerReturn(o)" title="Registrar Devolução">
+                <i class="bi bi-arrow-return-left"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="showDetails[o.id]" class="details-row">
+            <td colspan="7">
+              <div class="order-details">
+                <h4>Produtos da Venda #{{o.id}}</h4>
+                <table class="details-table">
+                  <thead>
+                    <tr>
+                      <th>Produto</th>
+                      <th>Quantidade</th>
+                      <th>Preço Unit.</th>
+                      <th>Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of o.items">
+                      <td>{{item.productName || 'Produto ID ' + item.productId}}</td>
+                      <td>{{item.quantity}}</td>
+                      <td>{{item.unitPrice | currency:'BRL'}}</td>
+                      <td><strong>{{item.subtotal | currency:'BRL'}}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
     <div class="pagination">

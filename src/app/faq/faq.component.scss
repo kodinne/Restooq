@@ -1,0 +1,266 @@
+.faq-page {
+  background: #ffffff;
+}
+
+.hero-faq {
+  background: linear-gradient(135deg, var(--marrom-escuro) 0%, var(--marrom-medio-escuro) 100%);
+  color: var(--branco-sujo);
+  padding: 80px 20px;
+  text-align: center;
+  
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    
+    i {
+      font-size: 64px;
+      display: block;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+    
+    h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin: 0 0 16px 0;
+      color: white;
+    }
+    
+    .lead {
+      font-size: 20px;
+      opacity: 0.95;
+      margin: 0;
+    }
+  }
+}
+
+.faq-content {
+  padding: 80px 20px;
+  background: var(--bege-claro);
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 60px;
+  }
+  
+  .faq-category {
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #0f1d40;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid #6B4423;
+      
+      i {
+        color: #6B4423;
+        font-size: 28px;
+      }
+    }
+  }
+  
+  .faq-item {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    summary {
+      padding: 20px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #0f1d40;
+      cursor: pointer;
+      list-style: none;
+      position: relative;
+      transition: all 0.2s ease;
+      
+      &::-webkit-details-marker {
+        display: none;
+      }
+      
+      &::after {
+        content: '\F282';
+        font-family: 'bootstrap-icons';
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6B4423;
+        font-size: 20px;
+        transition: transform 0.2s ease;
+      }
+      
+      &:hover {
+        color: #6B4423;
+      }
+    }
+    
+    &[open] summary::after {
+      transform: translateY(-50%) rotate(180deg);
+    }
+    
+    p {
+      padding: 0 20px 20px 20px;
+      color: #6b7a90;
+      line-height: 1.7;
+      margin: 0;
+      animation: fadeIn 0.3s ease;
+      
+      a {
+        color: #5a6ff2;
+        font-weight: 600;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  
+  .faq-cta {
+    background: white;
+    border-radius: 16px;
+    padding: 48px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    
+    i {
+      font-size: 56px;
+      color: #6B4423;
+      display: block;
+      margin-bottom: 20px;
+    }
+    
+    h3 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0f1d40;
+      margin-bottom: 12px;
+    }
+    
+    p {
+      font-size: 16px;
+      color: #6b7a90;
+      margin-bottom: 24px;
+    }
+    
+    .btn {
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      
+      &.coffee {
+        background: linear-gradient(135deg, #6B4423 0%, #8B6F47 100%);
+        color: white;
+        
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 24px rgba(107, 68, 35, 0.4);
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// RESPONSIVIDADE
+@media (max-width: 992px) {
+  .hero-faq {
+    padding: 60px 20px;
+    
+    .hero-content {
+      h1 {
+        font-size: 36px;
+      }
+      
+      .lead {
+        font-size: 18px;
+      }
+    }
+  }
+  
+  .faq-content {
+    padding: 60px 20px;
+    
+    .faq-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-faq {
+    padding: 40px 20px;
+    
+    .hero-content {
+      i {
+        font-size: 48px;
+      }
+      
+      h1 {
+        font-size: 28px;
+      }
+      
+      .lead {
+        font-size: 16px;
+      }
+    }
+  }
+  
+  .faq-content {
+    padding: 40px 20px;
+    
+    .faq-item {
+      summary {
+        padding: 16px;
+        font-size: 15px;
+        
+        &::after {
+          right: 16px;
+          font-size: 18px;
+        }
+      }
+      
+      p {
+        padding: 0 16px 16px 16px;
+        font-size: 14px;
+      }
+    }
+    
+    .faq-cta {
+      padding: 32px 20px;
+      
+      h3 {
+        font-size: 24px;
+      }
+    }
+  }
+}
+

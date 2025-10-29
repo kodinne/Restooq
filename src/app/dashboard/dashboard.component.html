@@ -1,7 +1,28 @@
 <div class="layout">
   <div></div>
   <main class="content">
-  
+    <!-- BOTÕES DE AÇÃO RÁPIDA -->
+    <section class="quick-actions">
+      <h2>Ações Rápidas</h2>
+      <div class="action-buttons">
+        <a routerLink="/products/new" class="action-btn add">
+          <i class="bi bi-plus-circle"></i>
+          <span>Adicionar Produto</span>
+        </a>
+        <a routerLink="/stock" class="action-btn manage">
+          <i class="bi bi-box-seam"></i>
+          <span>Gerenciar Estoque</span>
+        </a>
+        <a routerLink="/pdv" class="action-btn sale">
+          <i class="bi bi-cart3"></i>
+          <span>Nova Venda (PDV)</span>
+        </a>
+        <button (click)="registerReturn()" class="action-btn return">
+          <i class="bi bi-arrow-return-left"></i>
+          <span>Registrar Devolução</span>
+        </button>
+      </div>
+    </section>
 
     <section class="cards" *ngIf="data">
       <div class="card"><div class="title">Receita</div><div class="value">{{data.cards.revenue | currency:'BRL':'symbol':'1.0-0'}}</div></div>
@@ -26,11 +47,11 @@
 
     <section class="grid">
       <div class="panel">
-        <div class="panel-title">Alerta de estoque</div>
+        <div class="panel-title">Alerta de estoque baixo</div>
         <table class="table" *ngIf="data">
           <thead>
             <tr>
-              <th>SKU</th><th>Product</th><th>Stock</th><th>Status</th>
+              <th>SKU</th><th>Produto</th><th>Estoque</th><th>Status</th><th>Ação</th>
             </tr>
           </thead>
           <tbody>
@@ -38,7 +59,12 @@
               <td>{{p.sku}}</td>
               <td>{{p.name}}</td>
               <td>{{p.stock}}</td>
-              <td><span class="badge warning">Low</span></td>
+              <td><span class="badge warning">Baixo</span></td>
+              <td>
+                <button class="btn-icon" title="Reabastecer" (click)="restock(p.id)">
+                  <i class="bi bi-plus-circle"></i>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -48,7 +74,7 @@
         <table class="table" *ngIf="data">
           <thead>
             <tr>
-              <th>Product</th><th>Quantity</th>
+              <th>Produto</th><th>Quantidade</th>
             </tr>
           </thead>
           <tbody>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProductsService } from '../services/products.service';
@@ -8,22 +8,97 @@ import { ProductsService } from '../services/products.service';
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss']
 })
-export class ProductFormComponent {
+export class ProductFormComponent implements OnInit {
   loading = false;
   form = this.fb.group({
-    sku: ['', Validators.required],
+    sku: [{ value: '', disabled: true }],
     name: ['', Validators.required],
     category: [''],
+    costPrice: [0, [Validators.required, Validators.min(0)]],
+    profitMargin: [0, [Validators.required, Validators.min(0)]],
     price: [0, [Validators.required, Validators.min(0)]],
     stock: [0, [Validators.required, Validators.min(0)]]
   });
 
-  constructor(private fb: FormBuilder, private svc: ProductsService, private router: Router) {}
+  private isCalculating = false;
+
+  constructor(private fb: FormBuilder, private svc: ProductsService, private router: Router) {
+    this.generateSKU();
+  }
+
+  ngOnInit(): void {
+    // Observa mudanças no preço de compra
+    this.form.get('costPrice')?.valueChanges.subscribe(() => {
+      if (!this.isCalculating) {
+        this.calculatePriceFromCostAndMargin();
+      }
+    });
+
+    // Observa mudanças na margem de lucro
+    this.form.get('profitMargin')?.valueChanges.subscribe(() => {
+      if (!this.isCalculating) {
+        this.calculatePriceFromCostAndMargin();
+      }
+    });
+
+    // Observa mudanças no preço de venda
+    this.form.get('price')?.valueChanges.subscribe(() => {
+      if (!this.isCalculating) {
+        this.calculateMarginFromPrice();
+      }
+    });
+  }
+
+  generateSKU(): void {
+    const timestamp = Date.now().toString().slice(-8);
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const sku = `PRD-${timestamp}-${random}`;
+    this.form.patchValue({ sku });
+  }
+
+  /**
+   * Calcula o preço de venda baseado no preço de compra e margem de lucro
+   * Fórmula: Preço de Venda = Preço de Compra * (1 + Margem / 100)
+   */
+  calculatePriceFromCostAndMargin(): void {
+    const costPrice = this.form.get('costPrice')?.value || 0;
+    const profitMargin = this.form.get('profitMargin')?.value || 0;
+    
+    if (costPrice > 0) {
+      const calculatedPrice = costPrice * (1 + profitMargin / 100);
+      
+      this.isCalculating = true;
+      this.form.patchValue({ 
+        price: parseFloat(calculatedPrice.toFixed(2)) 
+      }, { emitEvent: false });
+      this.isCalculating = false;
+    }
+  }
+
+  /**
+   * Calcula a margem de lucro baseada no preço de compra e preço de venda
+   * Fórmula: Margem = ((Preço de Venda - Preço de Compra) / Preço de Compra) * 100
+   */
+  calculateMarginFromPrice(): void {
+    const costPrice = this.form.get('costPrice')?.value || 0;
+    const price = this.form.get('price')?.value || 0;
+    
+    if (costPrice > 0 && price > 0) {
+      const calculatedMargin = ((price - costPrice) / costPrice) * 100;
+      
+      this.isCalculating = true;
+      this.form.patchValue({ 
+        profitMargin: parseFloat(calculatedMargin.toFixed(2)) 
+      }, { emitEvent: false });
+      this.isCalculating = false;
+    }
+  }
 
   submit(){
     if(this.form.invalid) return;
     this.loading = true;
-    this.svc.create(this.form.value as any).subscribe({
+    const formData = { ...this.form.getRawValue() };
+    this.svc.create(formData as any).subscribe({
       next: ()=> { this.loading=false; this.router.navigate(['/stock']); },
       error: ()=> this.loading=false
     });

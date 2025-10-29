@@ -1,12 +1,178 @@
 <app-public-header></app-public-header>
-<section class="public-page">
-  <h1>FAQ</h1>
-  <details open>
-    <summary>Como acesso o sistema?</summary>
-    <p>Crie sua conta e faça login para acessar o dashboard.</p>
-  </details>
-  <details>
-    <summary>Posso exportar relatórios?</summary>
-    <p>Sim, na área de pedidos e estoque (em breve com exportação para Excel).</p>
-  </details>
-</section>
+
+<div class="faq-page">
+  <section class="hero-faq">
+    <div class="container">
+      <div class="hero-content">
+        <i class="bi bi-question-circle"></i>
+        <h1>Perguntas Frequentes</h1>
+        <p class="lead">Tire suas dúvidas sobre o REStooq</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-content">
+    <div class="container">
+      <div class="faq-grid">
+        <div class="faq-category">
+          <h2><i class="bi bi-rocket-takeoff"></i> Começando</h2>
+          
+          <details class="faq-item" open>
+            <summary>Como acesso o sistema?</summary>
+            <p>
+              Para acessar o REStooq, primeiro crie sua conta gratuita clicando no botão 
+              "Cadastrar" no menu superior. Após criar sua conta, faça login com seu e-mail 
+              e senha para acessar o dashboard completo.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>O sistema é gratuito?</summary>
+            <p>
+              Sim! Oferecemos um plano gratuito com recursos básicos para você começar. 
+              Também temos planos pagos com funcionalidades avançadas para empresas que 
+              precisam de mais recursos e suporte premium.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Preciso instalar algo no meu computador?</summary>
+            <p>
+              Não! O REStooq é 100% online (baseado na nuvem). Você só precisa de um 
+              navegador web e conexão com a internet. Funciona em computadores, tablets 
+              e smartphones.
+            </p>
+          </details>
+        </div>
+
+        <div class="faq-category">
+          <h2><i class="bi bi-box-seam"></i> Gestão de Estoque</h2>
+          
+          <details class="faq-item">
+            <summary>Como cadastro produtos?</summary>
+            <p>
+              Acesse o menu "Novo Produto" na barra lateral. Preencha as informações como 
+              nome, categoria, preço e quantidade em estoque. O SKU é gerado automaticamente. 
+              O sistema atualiza o estoque a cada venda.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>O sistema alerta quando o estoque está baixo?</summary>
+            <p>
+              Sim! O dashboard mostra automaticamente produtos com estoque baixo (abaixo de 5 
+              unidades). Você também pode configurar alertas personalizados para cada produto.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Posso importar produtos de uma planilha?</summary>
+            <p>
+              Estamos desenvolvendo essa funcionalidade! Em breve você poderá importar 
+              produtos diretamente de arquivos Excel ou CSV, facilitando a migração de 
+              sistemas antigos.
+            </p>
+          </details>
+        </div>
+
+        <div class="faq-category">
+          <h2><i class="bi bi-cart3"></i> PDV e Vendas</h2>
+          
+          <details class="faq-item">
+            <summary>Como funciona o PDV (Ponto de Venda)?</summary>
+            <p>
+              O PDV é uma interface simplificada para vendas rápidas. Busque produtos, 
+              adicione ao carrinho, escolha a forma de pagamento (dinheiro, cartão ou PIX) 
+              e finalize a venda. O estoque é atualizado automaticamente.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Posso usar o PDV em um tablet?</summary>
+            <p>
+              Sim! O PDV é totalmente responsivo e funciona perfeitamente em tablets e 
+              smartphones. Ideal para vendas em balcão ou eventos.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Como calculo o troco automaticamente?</summary>
+            <p>
+              Ao selecionar "Dinheiro" como forma de pagamento, digite o valor recebido 
+              do cliente. O sistema calcula automaticamente o troco a ser devolvido.
+            </p>
+          </details>
+        </div>
+
+        <div class="faq-category">
+          <h2><i class="bi bi-graph-up"></i> Relatórios e Análises</h2>
+          
+          <details class="faq-item">
+            <summary>Posso exportar relatórios?</summary>
+            <p>
+              Sim! Nas áreas de Pedidos e Estoque você encontrará botões para exportar 
+              dados para Excel. Em breve teremos relatórios PDF e mais opções de 
+              personalização.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Quais gráficos estão disponíveis?</summary>
+            <p>
+              O dashboard oferece gráficos de produtos mais vendidos, participação no mercado, 
+              receitas, lucros e alertas de estoque. Todos são atualizados em tempo real.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Posso filtrar relatórios por período?</summary>
+            <p>
+              Estamos implementando filtros por data! Em breve você poderá visualizar 
+              relatórios de vendas por dia, semana, mês ou período personalizado.
+            </p>
+          </details>
+        </div>
+
+        <div class="faq-category">
+          <h2><i class="bi bi-shield-check"></i> Segurança e Suporte</h2>
+          
+          <details class="faq-item">
+            <summary>Meus dados estão seguros?</summary>
+            <p>
+              Sim! Utilizamos criptografia SSL/TLS para todas as comunicações, senhas 
+              criptografadas e backups automáticos diários. Seus dados são armazenados 
+              em servidores seguros.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Como faço backup dos meus dados?</summary>
+            <p>
+              Os backups são automáticos e realizados diariamente. Você também pode 
+              exportar seus dados manualmente a qualquer momento através dos relatórios.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>Como entro em contato com o suporte?</summary>
+            <p>
+              Use nossa página de <a routerLink="/contato">Contato</a> para enviar 
+              mensagens. Respondemos em até 24 horas. Clientes premium têm suporte 
+              prioritário por WhatsApp e e-mail.
+            </p>
+          </details>
+        </div>
+      </div>
+
+      <div class="faq-cta">
+        <i class="bi bi-chat-dots"></i>
+        <h3>Não encontrou sua resposta?</h3>
+        <p>Entre em contato conosco. Estamos aqui para ajudar!</p>
+        <a routerLink="/contato" class="btn coffee">
+          <i class="bi bi-envelope"></i>
+          Enviar Mensagem
+        </a>
+      </div>
+    </div>
+  </section>
+</div>

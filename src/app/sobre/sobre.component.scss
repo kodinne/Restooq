@@ -1,0 +1,274 @@
+.sobre-page {
+  background: #ffffff;
+}
+
+.hero-sobre {
+  background: linear-gradient(135deg, var(--marrom-escuro) 0%, var(--marrom-medio-escuro) 100%);
+  color: var(--branco-sujo);
+  padding: 80px 20px;
+  text-align: center;
+  
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    
+    i {
+      font-size: 64px;
+      display: block;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+    
+    h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin: 0 0 16px 0;
+      color: white;
+    }
+    
+    .lead {
+      font-size: 20px;
+      opacity: 0.95;
+      margin: 0;
+    }
+  }
+}
+
+.content-section {
+  padding: 80px 20px;
+  background: var(--bege-claro);
+  
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .text-content {
+    &.full-width {
+      max-width: 100%;
+    }
+    
+    h2 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--marrom-escuro);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      
+      i {
+        color: var(--marrom-medio-escuro);
+      }
+    }
+    
+    p {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.values-section {
+  padding: 80px 20px;
+  background: var(--branco-sujo);
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 800;
+    color: #0f1d40;
+    margin-bottom: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    
+    i {
+      color: #6B4423;
+    }
+  }
+  
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  
+  .value-card {
+    background: #f5f7fb;
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    
+    .value-icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #6B4423 0%, #8B6F47 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      
+      i {
+        font-size: 32px;
+        color: white;
+      }
+    }
+    
+    h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f1d40;
+      margin-bottom: 12px;
+    }
+    
+    p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #6b7a90;
+      margin: 0;
+    }
+  }
+}
+
+.mission-section {
+  padding: 80px 20px;
+  background: linear-gradient(135deg, var(--marrom-rosado-caramelo) 0%, var(--marrom-acinzentado) 100%);
+  color: var(--marrom-escuro);
+  
+  .mission-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    
+    i {
+      font-size: 56px;
+      display: block;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+    
+    h2 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 24px;
+      color: white;
+    }
+    
+    p {
+      font-size: 18px;
+      line-height: 1.8;
+      margin-bottom: 32px;
+      opacity: 0.95;
+    }
+    
+    .btn {
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      
+      &.coffee {
+        background: white;
+        color: #6B4423;
+        
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+      }
+    }
+  }
+}
+
+// RESPONSIVIDADE
+@media (max-width: 992px) {
+  .hero-sobre {
+    padding: 60px 20px;
+    
+    .hero-content {
+      h1 {
+        font-size: 36px;
+      }
+      
+      .lead {
+        font-size: 18px;
+      }
+    }
+  }
+  
+  .content-section {
+    padding: 60px 20px;
+    
+    .content-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+  
+  .values-section {
+    padding: 60px 20px;
+    
+    .values-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+  
+  .mission-section {
+    padding: 60px 20px;
+    
+    .mission-content {
+      h2 {
+        font-size: 30px;
+      }
+      
+      p {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-sobre {
+    padding: 40px 20px;
+    
+    .hero-content {
+      i {
+        font-size: 48px;
+      }
+      
+      h1 {
+        font-size: 28px;
+      }
+      
+      .lead {
+        font-size: 16px;
+      }
+    }
+  }
+  
+  .content-section,
+  .values-section,
+  .mission-section {
+    padding: 40px 20px;
+  }
+}
+

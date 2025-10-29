@@ -18,17 +18,22 @@
     <table class="table">
       <thead>
         <tr>
-          <th>SKU</th><th>Produto</th><th>Categoria</th><th>Instrução</th><th>Itens</th><th>Status</th>
+          <th>SKU</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Status</th><th>Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let p of products">
-          <td>#{{p.id}}</td>
+          <td>{{p.sku}}</td>
           <td>{{p.name}}</td>
           <td>{{p.category || '-'}}</td>
-          <td>Ajuste de estoque</td>
+          <td>{{p.price | currency:'BRL'}}</td>
           <td>{{p.stock}}</td>
-          <td><span class="badge" [class.completed]="p.status==='active'" [class.pending]="p.stock<=5">{{ p.stock<=5 ? 'Pendente' : 'Concluído' }}</span></td>
+          <td><span class="badge" [class.completed]="p.status==='active' && p.stock > 5" [class.pending]="p.stock<=5">{{ p.stock<=5 ? 'Baixo' : 'OK' }}</span></td>
+          <td>
+            <button class="btn-icon" title="Remover produto" (click)="deleteProduct(p.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>

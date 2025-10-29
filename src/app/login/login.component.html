@@ -1,34 +1,114 @@
 <app-public-header></app-public-header>
 
-<div class="auth auth-center">
-  <div class="form-card">
-    <h2><i class="bi bi-box-arrow-in-right"></i> Entrar</h2>
-    <p class="subtitle">Acesse seu painel com e-mail e senha.</p>
-
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="grid">
-      <label>Email
-        <input id="loginInput" type="email" formControlName="email" placeholder="seu@email.com" />
-        <small class="error" *ngIf="f['email']?.touched && f['email']?.errors?.['required']">Email  obrigatório</small>
-        <small class="error" *ngIf="f['email']?.touched && f['email']?.errors?.['email']">Email inválido</small>
-      </label>
-
-      <label>Senha
-        <input id="passwordInput" type="password" formControlName="password" placeholder="mínimo 6 caracteres" />
-        <small class="error" *ngIf="f['password']?.touched && f['password']?.errors?.['required']">Senha  obrigatória</small>
-        <small class="error" *ngIf="f['password']?.touched && f['password']?.errors?.['minlength']">Minimo de 6 caracteres</small>
-      </label>
-
-      <div class="actions">
-        <button class="btn primary" [disabled]="loginForm.invalid || submitting">
-          <span *ngIf="!submitting">Entrar</span>
-          <span *ngIf="submitting"><i class="bi bi-arrow-repeat"></i> Entrando...</span>
-        </button>
+<div class="login-page">
+  <div class="login-container">
+    <!-- COLUNA ESQUERDA: ILUSTRAÇÃO -->
+    <div class="login-illustration">
+      <div class="illustration-content">
+        <div class="coffee-icon">
+          <img src="assets/REStooq.png" alt="REStooq" class="login-logo" />
+        </div>
+        <h2>REStooq ERP</h2>
+        <p>Sistema completo de gestão de estoque e vendas</p>
+        <div class="features-list">
+          <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>PDV integrado</span>
+          </div>
+          <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Controle de estoque</span>
+          </div>
+          <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Relatórios em tempo real</span>
+          </div>
+          <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Gestão de vendas</span>
+          </div>
+        </div>
       </div>
-    </form>
+    </div>
 
-    <p class="error" *ngIf="errorMsg">{{errorMsg}}</p>
-    <p class="alt">Não tem conta? <a routerLink="/cadastro">Cadastre-se</a></p>
+    <!-- COLUNA DIREITA: FORMULÁRIO -->
+    <div class="login-form-section">
+      <div class="form-wrapper">
+        <div class="form-header">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <h1>Bem-vindo de volta</h1>
+          <p>Entre com sua conta para continuar</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          <div class="form-group">
+            <label for="email">
+              <i class="bi bi-envelope"></i> E-mail
+            </label>
+            <input 
+              id="email" 
+              type="email" 
+              formControlName="email" 
+              placeholder="seu@email.com"
+              [class.error]="f['email']?.touched && f['email']?.errors"
+            />
+            <small class="error-msg" *ngIf="f['email']?.touched && f['email']?.errors?.['required']">
+              E-mail é obrigatório
+            </small>
+            <small class="error-msg" *ngIf="f['email']?.touched && f['email']?.errors?.['email']">
+              E-mail inválido
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="password">
+              <i class="bi bi-lock"></i> Senha
+            </label>
+            <input 
+              id="password" 
+              type="password" 
+              formControlName="password" 
+              placeholder="Mínimo 6 caracteres"
+              [class.error]="f['password']?.touched && f['password']?.errors"
+            />
+            <small class="error-msg" *ngIf="f['password']?.touched && f['password']?.errors?.['required']">
+              Senha é obrigatória
+            </small>
+            <small class="error-msg" *ngIf="f['password']?.touched && f['password']?.errors?.['minlength']">
+              Mínimo de 6 caracteres
+            </small>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" />
+              <span>Lembrar de mim</span>
+            </label>
+            <a href="#" class="forgot-link">Esqueceu a senha?</a>
+          </div>
+
+          <button type="submit" class="btn-submit" [disabled]="loginForm.invalid || submitting">
+            <span *ngIf="!submitting">
+              <i class="bi bi-box-arrow-in-right"></i>
+              Entrar
+            </span>
+            <span *ngIf="submitting">
+              <i class="bi bi-arrow-repeat spin"></i>
+              Entrando...
+            </span>
+          </button>
+
+          <div class="error-alert" *ngIf="errorMsg">
+            <i class="bi bi-exclamation-circle"></i>
+            {{errorMsg}}
+          </div>
+        </form>
+
+        <div class="form-footer">
+          <p>Não tem uma conta? <a routerLink="/cadastro" class="signup-link">Cadastre-se gratuitamente</a></p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
 
