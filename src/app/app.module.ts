@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgChartsModule } from 'ng2-charts';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,9 +19,8 @@ import { ContatoComponent } from './contato/contato.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { HeaderModule } from './shared/header/header.module';
 import { FooterModule } from './shared/footer/footer.module';
-<<<<<<< Updated upstream
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgChartsModule } from 'ng2-charts';
+
+/* Componentes/serviços extras vindos do branch "updated upstream" */
 import { AuthInterceptor } from './services/auth.interceptor';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { OrdersComponent } from './orders/orders.component';
@@ -28,9 +29,6 @@ import { ShellComponent } from './shared/shell/shell.component';
 import { ProductFormComponent } from './products/product-form.component';
 import { OrderFormComponent } from './orders/order-form.component';
 import { PublicHeaderComponent } from './shared/public-header/public-header.component';
-=======
-import { HttpClientModule } from '@angular/common/http';
->>>>>>> Stashed changes
 
 @NgModule({
   declarations: [
@@ -44,6 +42,8 @@ import { HttpClientModule } from '@angular/common/http';
     FaqComponent,
     ContatoComponent,
     CadastroComponent,
+
+    /* Declarações adicionais */
     DashboardComponent,
     OrdersComponent,
     StockComponent,
@@ -56,16 +56,17 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     RouterModule,
     AppRoutingModule,
-    HttpClientModule,
+    HttpClientModule,           // apenas uma vez
     FormsModule,
     ReactiveFormsModule,
     HeaderModule,
     FooterModule,
-    HttpClientModule,
     NgbModule,
     NgChartsModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
