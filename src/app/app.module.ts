@@ -17,8 +17,7 @@ import { ContatoComponent } from './contato/contato.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { HeaderModule } from './shared/header/header.module';
 import { FooterModule } from './shared/footer/footer.module';
-<<<<<<< Updated upstream
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgChartsModule } from 'ng2-charts';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -28,9 +27,6 @@ import { ShellComponent } from './shared/shell/shell.component';
 import { ProductFormComponent } from './products/product-form.component';
 import { OrderFormComponent } from './orders/order-form.component';
 import { PublicHeaderComponent } from './shared/public-header/public-header.component';
-=======
-import { HttpClientModule } from '@angular/common/http';
->>>>>>> Stashed changes
 
 @NgModule({
   declarations: [
@@ -56,7 +52,6 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     RouterModule,
     AppRoutingModule,
-    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     HeaderModule,

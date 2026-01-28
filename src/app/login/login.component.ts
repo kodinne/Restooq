@@ -36,14 +36,19 @@ export class LoginComponent {
     // Aqui você envia para seu serviço de autenticação
     this.authService.login( (email || '').trim().toLowerCase(), password ).subscribe({
       next: (res: any) => {
-        localStorage.setItem('token', res?.access_token);
-        if (res?.user?.name) { localStorage.setItem('userName', res.user.name); }
+        // Backend retorna { token, user }
+        if (res?.token) {
+          localStorage.setItem('token', res.token);
+        }
+        if (res?.user?.name) {
+          localStorage.setItem('userName', res.user.name);
+        }
         this.router.navigate(['/dashboard']);
         this.submitting = false;
       },
       error: (err: any) => {
         console.error('Erro no login:', err);
-        this.errorMsg = err?.error?.message || 'Usu�rio ou senha inv�lidos.';
+        this.errorMsg = err?.error?.message || 'Usuário ou senha inválidos.';
         this.submitting = false;
       },
     });
