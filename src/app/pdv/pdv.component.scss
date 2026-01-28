@@ -116,7 +116,7 @@
       .product-name {
         font-size: 15px;
         font-weight: 600;
-        color: #0f1d40;
+        color: var(--text-primary);
         margin: 0 0 4px 0;
       }
       
@@ -134,7 +134,7 @@
         .product-price {
           font-size: 16px;
           font-weight: 700;
-          color: #5a6ff2;
+          color: var(--primary-color);
         }
         
         .product-stock {
@@ -201,7 +201,7 @@
     h2 {
       font-size: 20px;
       font-weight: 700;
-      color: #0f1d40;
+      color: var(--text-primary);
       margin: 0;
       display: flex;
       align-items: center;
@@ -209,8 +209,8 @@
     }
     
     .cart-count {
-      background: #5a6ff2;
-      color: white;
+      background: var(--primary-color);
+      color: var(--branco-sujo);
       padding: 4px 12px;
       border-radius: 12px;
       font-size: 13px;
@@ -306,12 +306,12 @@
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          color: #5a6ff2;
+          color: var(--primary-color);
           transition: all 0.2s;
           
           &:hover {
-            background: #5a6ff2;
-            color: white;
+            background: var(--primary-color);
+            color: var(--branco-sujo);
           }
         }
         
@@ -331,7 +331,7 @@
         flex: 1;
         text-align: right;
         font-weight: 700;
-        color: #0f1d40;
+        color: var(--text-primary);
         font-size: 14px;
       }
       
@@ -397,13 +397,13 @@
       .customer-input {
         width: 100%;
         padding: 10px 12px;
-        border: 1px solid #e6eaf2;
+        border: 1px solid var(--border-color);
         border-radius: 8px;
         font-size: 14px;
         
         &:focus {
           outline: none;
-          border-color: #5a6ff2;
+          border-color: var(--primary-color);
         }
       }
     }
@@ -445,14 +445,14 @@
         }
         
         &:hover {
-          border-color: #5a6ff2;
-          color: #5a6ff2;
+          border-color: var(--primary-color);
+          color: var(--primary-color);
         }
         
         &.active {
-          border-color: #5a6ff2;
-          background: #5a6ff2;
-          color: white;
+          border-color: var(--primary-color);
+          background: var(--primary-color);
+          color: var(--branco-sujo);
         }
       }
     }
@@ -471,14 +471,14 @@
       .cash-value {
         width: 100%;
         padding: 10px 12px;
-        border: 1px solid #e6eaf2;
+        border: 1px solid var(--border-color);
         border-radius: 8px;
         font-size: 16px;
         font-weight: 600;
         
         &:focus {
           outline: none;
-          border-color: #5a6ff2;
+          border-color: var(--primary-color);
         }
       }
       
@@ -523,7 +523,7 @@
         .total-value {
           font-size: 24px;
           font-weight: 700;
-          color: #0f1d40;
+          color: var(--text-primary);
         }
       }
     }
@@ -561,12 +561,12 @@
         }
         
         &.btn-primary {
-          background: linear-gradient(135deg, #5a6ff2 0%, #4a5fd8 100%);
-          color: white;
+          background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+          color: var(--branco-sujo);
           
           &:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(90, 111, 242, 0.4);
+            box-shadow: 0 4px 12px rgba(93, 64, 55, 0.4);
           }
         }
       }
