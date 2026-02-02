@@ -18,6 +18,7 @@
   --primary-color: #5D4037;           /* Marrom médio escuro */
   --primary-light: #8D6E63;           /* Marrom acinzentado */
   --primary-dark: #3E2723;            /* Marrom escuro */
+  --secondary-color: #A1887F;         /* Caramelo para destaques/links */
   --accent-coffee: #A1887F;           /* Marrom rosado caramelo */
   --accent-cream: #D7CCC8;            /* Bege claro */
   
@@ -285,8 +286,8 @@ select {
   
   &:focus {
     outline: none;
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 3px rgba(90, 111, 242, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(93, 64, 55, 0.16);
   }
   
   &::placeholder {

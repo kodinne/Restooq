@@ -16,15 +16,8 @@ export class AuthService {
   }
 
   getUserName(): string | null {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
-    try {
-      const [, payload] = token.split('.');
-      const json = JSON.parse(atob(payload));
-      return json?.name || json?.email || null;
-    } catch {
-      return null;
-    }
+    const storedName = localStorage.getItem('userName');
+    return storedName || null;
   }
 
   logout() {

@@ -50,9 +50,9 @@
               type="text" 
               formControlName="nome" 
               placeholder="Digite seu nome completo"
-              [class.error]="f['nome']?.touched && f['nome']?.errors"
+              [class.error]="f['nome'].touched && f['nome'].errors"
             />
-            <small class="error-msg" *ngIf="f['nome']?.touched && f['nome']?.errors?.['required']">
+            <small class="error-msg" *ngIf="f['nome'].touched && f['nome'].errors?.['required']">
               Nome é obrigatório
             </small>
           </div>
@@ -66,12 +66,12 @@
               type="email" 
               formControlName="email" 
               placeholder="seu@email.com"
-              [class.error]="f['email']?.touched && f['email']?.errors"
+              [class.error]="f['email'].touched && f['email'].errors"
             />
-            <small class="error-msg" *ngIf="f['email']?.touched && f['email']?.errors?.['required']">
+            <small class="error-msg" *ngIf="f['email'].touched && f['email'].errors?.['required']">
               E-mail é obrigatório
             </small>
-            <small class="error-msg" *ngIf="f['email']?.touched && f['email']?.errors?.['email']">
+            <small class="error-msg" *ngIf="f['email'].touched && f['email'].errors?.['email']">
               E-mail inválido
             </small>
           </div>
@@ -85,12 +85,12 @@
               type="password" 
               formControlName="senha" 
               placeholder="Mínimo 6 caracteres"
-              [class.error]="f['senha']?.touched && f['senha']?.errors"
+              [class.error]="f['senha'].touched && f['senha'].errors"
             />
-            <small class="error-msg" *ngIf="f['senha']?.touched && f['senha']?.errors?.['required']">
+            <small class="error-msg" *ngIf="f['senha'].touched && f['senha'].errors?.['required']">
               Senha é obrigatória
             </small>
-            <small class="error-msg" *ngIf="f['senha']?.touched && f['senha']?.errors?.['minlength']">
+            <small class="error-msg" *ngIf="f['senha'].touched && f['senha'].errors?.['minlength']">
               Mínimo de 6 caracteres
             </small>
           </div>
@@ -104,12 +104,12 @@
               type="password" 
               formControlName="confirmarSenha" 
               placeholder="Digite a senha novamente"
-              [class.error]="f['confirmarSenha']?.touched && f['confirmarSenha']?.errors"
+              [class.error]="f['confirmarSenha'].touched && f['confirmarSenha'].errors"
             />
-            <small class="error-msg" *ngIf="f['confirmarSenha']?.touched && f['confirmarSenha']?.errors?.['required']">
+            <small class="error-msg" *ngIf="f['confirmarSenha'].touched && f['confirmarSenha'].errors?.['required']">
               Confirmação de senha é obrigatória
             </small>
-            <small class="error-msg" *ngIf="f['confirmarSenha']?.touched && f['confirmarSenha']?.errors?.['mustMatch']">
+            <small class="error-msg" *ngIf="f['confirmarSenha'].touched && f['confirmarSenha'].errors?.['mustMatch']">
               As senhas não coincidem
             </small>
           </div>
