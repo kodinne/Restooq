@@ -19,71 +19,21 @@ let products = [
   { id: 6, sku: 'SKU-2025-006', name: 'Produto Exemplo 6', category: 'Móveis', price: 599.00, stock: 8, status: 'active' }
 ];
 
-let orders = [
-  { 
-    id: 1, 
-    customerId: 1, 
-    customerName: 'João Silva', 
-    date: '2025-10-20', 
-    createdAt: '2025-10-20T10:30:00Z',
-    status: 'completed', 
-    total: 450.00, 
-    salesChannel: 'Loja Física',
-    destination: 'Balcão',
-    items: [
-      { productId: 1, productName: 'Produto Exemplo 1', quantity: 2, unitPrice: 299.90, subtotal: 599.80 }
-    ] 
-  },
-  { 
-    id: 2, 
-    customerId: 2, 
-    customerName: 'Maria Santos', 
-    date: '2025-10-21', 
-    createdAt: '2025-10-21T14:20:00Z',
-    status: 'pending', 
-    total: 99.50, 
-    salesChannel: 'PDV',
-    destination: 'Balcão',
-    items: [
-      { productId: 2, productName: 'Produto Exemplo 2', quantity: 5, unitPrice: 19.90, subtotal: 99.50 }
-    ] 
-  },
-  { 
-    id: 3, 
-    customerId: 3, 
-    customerName: 'Pedro Costa', 
-    date: '2025-10-22', 
-    createdAt: '2025-10-22T16:45:00Z',
-    status: 'completed', 
-    total: 299.90, 
-    salesChannel: 'PDV',
-    destination: 'Balcão',
-    items: [
-      { productId: 1, productName: 'Produto Exemplo 1', quantity: 1, unitPrice: 299.90, subtotal: 299.90 }
-    ] 
-  }
-];
+let orders = [];
 
 let users = [
   { id: 1, name: 'Admin', email: 'admin@restooq.com', password: '123456' }
 ];
 
-let returns = [
-  { id: 1, orderId: 1, productId: 1, quantity: 1, reason: 'Produto danificado', date: '2025-10-23', value: 299.90 },
-  { id: 2, orderId: 2, productId: 2, quantity: 2, reason: 'Cliente desistiu', date: '2025-10-24', value: 39.80 }
-];
+let returns = [];
 
-let purchases = [
-  { id: 1, productId: 1, quantity: 100, unitCost: 200.00, totalCost: 20000.00, date: '2025-10-15', supplier: 'Fornecedor A' },
-  { id: 2, productId: 2, quantity: 200, unitCost: 10.00, totalCost: 2000.00, date: '2025-10-16', supplier: 'Fornecedor B' },
-  { id: 3, productId: 3, quantity: 50, unitCost: 60.00, totalCost: 3000.00, date: '2025-10-17', supplier: 'Fornecedor C' }
-];
+let purchases = [];
 
 let productIdCounter = 7;
-let orderIdCounter = 4;
+let orderIdCounter = 1;
 let userIdCounter = 2;
-let returnIdCounter = 3;
-let purchaseIdCounter = 4;
+let returnIdCounter = 1;
+let purchaseIdCounter = 1;
 
 // ==================== AUTH ROUTES ====================
 app.post('/auth/login', (req, res) => {
@@ -447,4 +397,5 @@ app.listen(PORT, () => {
   console.log('↩️  Devoluções:', returns.length);
   console.log('🛒 Compras:', purchases.length);
 });
+
 

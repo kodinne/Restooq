@@ -32,7 +32,8 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 10px 24px rgba(62, 39, 35, 0.08);
+  border: 1px solid rgba(62, 39, 35, 0.09);
   flex-wrap: wrap;
   
   input {
@@ -55,7 +56,8 @@
   background: white;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 10px 24px rgba(62, 39, 35, 0.08);
+  border: 1px solid rgba(62, 39, 35, 0.09);
   
   .table {
     width: 100%;

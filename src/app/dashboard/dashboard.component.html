@@ -23,6 +23,15 @@
         </button>
       </div>
     </section>
+    <section class="toolbar">
+      <label>Período:</label>
+      <select [(ngModel)]="period" (change)="loadDashboard()">
+        <option value="all">Tudo</option>
+        <option value="today">Hoje</option>
+        <option value="7d">7 dias</option>
+        <option value="30d">30 dias</option>
+      </select>
+    </section>
 
     <section class="cards" *ngIf="data">
       <div class="card"><div class="title">Receita</div><div class="value">{{data.cards.revenue | currency:'BRL':'symbol':'1.0-0'}}</div></div>
@@ -51,11 +60,12 @@
         <table class="table" *ngIf="data">
           <thead>
             <tr>
-              <th>SKU</th><th>Produto</th><th>Estoque</th><th>Status</th><th>Ação</th>
+              <th>ID</th><th>SKU</th><th>Produto</th><th>Estoque</th><th>Status</th><th>Ação</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let p of data.stockAlert">
+              <td>{{p.id}}</td>
               <td>{{p.sku}}</td>
               <td>{{p.name}}</td>
               <td>{{p.stock}}</td>
@@ -88,3 +98,5 @@
     </section>
   </main>
 </div>
+
+

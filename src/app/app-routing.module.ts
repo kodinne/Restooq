@@ -15,6 +15,8 @@ import { ShellComponent } from './shared/shell/shell.component';
 import { ProductFormComponent } from './products/product-form.component';
 import { OrderFormComponent } from './orders/order-form.component';
 import { PdvComponent } from './pdv/pdv.component';
+import { CustomersComponent } from './customers/customers.component';
+import { ReturnsHistoryComponent } from './returns-history/returns-history.component';
 
 const routes: Routes = [
   // Páginas públicas (fora do shell da dashboard)
@@ -32,6 +34,8 @@ const routes: Routes = [
     { path:"pdv", component:PdvComponent },
     { path:"orders", component:OrdersComponent },
     { path:"orders/new", component: OrderFormComponent },
+    { path:"returns", component: ReturnsHistoryComponent },
+    { path:"customers", component: CustomersComponent },
     { path:"stock", component:StockComponent },
     { path:"products/new", component: ProductFormComponent },
     { path:"produtos-cadastrados", component:ProdutosCadastradosComponent },

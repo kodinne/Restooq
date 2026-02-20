@@ -1,0 +1,39 @@
+<div class="page">
+  <header class="page-header">
+    <div class="title">Clientes</div>
+  </header>
+
+  <div class="panel">
+    <div class="toolbar">
+      <input placeholder="Buscar cliente" [(ngModel)]="q" (keyup.enter)="load()" />
+      <button class="btn" (click)="load()">Filtrar</button>
+    </div>
+
+    <div class="form-grid">
+      <input placeholder="Nome*" [(ngModel)]="form.name" />
+      <input placeholder="Telefone" [(ngModel)]="form.phone" />
+      <input placeholder="Email (opcional)" [(ngModel)]="form.email" />
+      <button class="btn primary" (click)="create()">+ Cliente</button>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Nome</th><th>Telefone</th><th>Email</th><th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of customers">
+          <td>{{ c.id }}</td>
+          <td>{{ c.name }}</td>
+          <td>{{ c.phone || '-' }}</td>
+          <td>{{ c.email }}</td>
+          <td>
+            <button class="btn-icon" title="Editar" (click)="edit(c)"><i class="bi bi-pencil"></i></button>
+            <button class="btn-icon" title="Excluir" (click)="remove(c)"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

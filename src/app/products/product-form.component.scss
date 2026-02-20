@@ -31,7 +31,14 @@
   background: white;
   border-radius: 16px;
   padding: 40px;
-  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(62, 39, 35, 0.09);
+  box-shadow: 0 16px 36px rgba(62, 39, 35, 0.11);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 38px rgba(62, 39, 35, 0.14);
+  }
   
   .form-icon {
     width: 80px;
@@ -76,11 +83,11 @@
 
     // SEÇÃO DE PRECIFICAÇÃO
     .pricing-section {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      background: linear-gradient(135deg, #fbf7f4 0%, #efe5df 100%);
       border-radius: 12px;
       padding: 24px;
       margin-bottom: 24px;
-      border: 2px solid var(--border-color);
+      border: 2px solid #dfd1c9;
       
       .section-title {
         font-size: 18px;
@@ -246,7 +253,14 @@
     background: white;
     border-radius: 16px;
     padding: 24px;
-    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(62, 39, 35, 0.09);
+    box-shadow: 0 10px 24px rgba(62, 39, 35, 0.09);
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(62, 39, 35, 0.12);
+    }
     
     i {
       font-size: 40px;

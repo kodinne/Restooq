@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrdersService, Order } from '../services/orders.service';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../services/api-base';
 
 @Component({
   selector: 'app-orders',
@@ -8,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {
+  private readonly returnsUrl = `${API_BASE_URL}/returns`;
   list: Order[] = [];
   total = 0;
   page = 1;
@@ -60,6 +62,37 @@ export class OrdersComponent implements OnInit {
 
   pagesTotal(){ 
     return Math.ceil(this.total/this.limit) || 1; 
+  }
+
+  exportCsv(): void {
+    if (!this.list.length) {
+      alert('Não há pedidos para exportar.');
+      return;
+    }
+
+    const header = ['id', 'data', 'cliente', 'status', 'total', 'itens'];
+    const rows = this.list.map((o) => {
+      const items = (o.items || [])
+        .map((i) => `${i.productName || i.productId} x${i.quantity}`)
+        .join(' | ');
+      return [
+        String(o.id),
+        String(o.createdAt || ''),
+        String(o.customerName || ''),
+        String(o.status || ''),
+        String(o.total ?? ''),
+        items
+      ].map(this.escapeCsv).join(',');
+    });
+
+    const csv = [header.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pedidos-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
   toggleDetails(orderId: number): void {
@@ -117,7 +150,7 @@ export class OrdersComponent implements OnInit {
     const value = item.unitPrice * quantity;
 
     // Registra a devolução
-    this.http.post('http://localhost:3000/returns', {
+    this.http.post(this.returnsUrl, {
       orderId: order.id,
       productId: item.productId,
       quantity: quantity,
@@ -130,8 +163,15 @@ export class OrdersComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao registrar devolução:', err);
-        alert('Erro ao registrar devolução. Tente novamente.');
+        const msg = err?.error?.message || 'Erro ao registrar devolucao. Tente novamente.';
+        alert(msg);
       }
     });
   }
+
+  private escapeCsv(value: string): string {
+    const safe = (value ?? '').replace(/"/g, '""');
+    return `"${safe}"`;
+  }
 }
+

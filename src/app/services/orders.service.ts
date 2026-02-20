@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from './api-base';
 
 export interface OrderItem { 
   productId: number; 
@@ -26,7 +27,7 @@ export interface Order {
 
 @Injectable({ providedIn: 'root' })
 export class OrdersService {
-  private readonly apiUrl = 'http://localhost:3000/orders';
+  private readonly apiUrl = `${API_BASE_URL}/orders`;
   constructor(private http: HttpClient) {}
   list(params?: { page?: number; limit?: number; status?: string; q?: string }): Observable<{items: Order[]; total: number; page: number; limit: number}> {
     let hp = new HttpParams();
@@ -40,3 +41,4 @@ export class OrdersService {
     return this.http.post<any>(this.apiUrl, body);
   }
 }
+

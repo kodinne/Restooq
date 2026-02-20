@@ -4,6 +4,7 @@ import { ChartData, ChartOptions } from 'chart.js';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ProductsService } from '../services/products.service';
+import { API_BASE_URL } from '../services/api-base';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,6 +12,8 @@ import { ProductsService } from '../services/products.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  private readonly returnsUrl = `${API_BASE_URL}/returns`;
+  period: 'all' | 'today' | '7d' | '30d' = '30d';
   data?: DashboardData;
   loading = false;
   barData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: 'Quantidade', backgroundColor: '#5D4037' }] };
@@ -26,8 +29,12 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadDashboard();
+  }
+
+  loadDashboard(): void {
     this.loading = true;
-    this.svc.load().subscribe({
+    this.svc.load(this.period).subscribe({
       next: (d) => {
         this.data = d;
         // Charts from API
@@ -52,7 +59,7 @@ export class DashboardComponent implements OnInit {
     if (quantity && !isNaN(Number(quantity))) {
       alert(`${quantity} unidades serão adicionadas ao produto ID ${productId}`);
       // Aqui você pode adicionar a lógica de reabastecimento
-      this.ngOnInit(); // Recarrega o dashboard
+      this.loadDashboard(); // Recarrega o dashboard
     }
   }
 
@@ -63,8 +70,9 @@ export class DashboardComponent implements OnInit {
         const products = response.items;
         
         // Pede informações da devolução
-        const orderId = prompt('ID do pedido:');
-        if (!orderId || isNaN(Number(orderId))) {
+        const orderIdInput = prompt('ID do pedido (ex: 3 ou #3):');
+        const orderId = this.parseId(orderIdInput);
+        if (!orderId) {
           alert('ID do pedido inválido!');
           return;
         }
@@ -76,13 +84,14 @@ export class DashboardComponent implements OnInit {
         });
         alert(productsMessage);
         
-        const productId = prompt('ID do produto devolvido:');
-        if (!productId || isNaN(Number(productId))) {
+        const productIdInput = prompt('ID do produto devolvido (ex: 3 ou #3):');
+        const productId = this.parseId(productIdInput);
+        if (!productId) {
           alert('ID do produto inválido!');
           return;
         }
         
-        const product = products.find(p => p.id === Number(productId));
+        const product = products.find(p => p.id === productId);
         if (!product) {
           alert('Produto não encontrado!');
           return;
@@ -98,27 +107,38 @@ export class DashboardComponent implements OnInit {
         const value = Number(quantity) * product.price;
         
         // Registra a devolução no backend
-        this.http.post('http://localhost:3000/returns', {
-          orderId: Number(orderId),
-          productId: Number(productId),
+        this.http.post(this.returnsUrl, {
+          orderId,
+          productId,
           quantity: Number(quantity),
           reason: reason || 'Sem motivo informado',
           value: value
         }).subscribe({
           next: () => {
             alert(`Devolução registrada com sucesso!\n\nProduto: ${product.name}\nQuantidade: ${quantity}\nValor: R$ ${value.toFixed(2)}`);
-            this.ngOnInit(); // Recarrega o dashboard
+            this.loadDashboard(); // Recarrega o dashboard
           },
           error: (err) => {
             console.error('Erro ao registrar devolução:', err);
-            alert('Erro ao registrar devolução. Tente novamente.');
+            const msg = err?.error?.message || 'Erro ao registrar devolucao. Tente novamente.';
+            alert(msg);
           }
         });
       },
       error: (err) => {
         console.error('Erro ao buscar produtos:', err);
-        alert('Erro ao buscar produtos. Tente novamente.');
+        const msg = err?.error?.message || 'Erro ao buscar produtos. Tente novamente.';
+        alert(msg);
       }
     });
   }
+
+  private parseId(value: string | null): number | null {
+    if (!value) return null;
+    const digits = value.replace(/\D/g, '');
+    if (!digits) return null;
+    const parsed = Number(digits);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+  }
 }
+

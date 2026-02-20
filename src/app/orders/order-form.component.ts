@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProductsService, Product } from '../services/products.service';
 import { OrdersService } from '../services/orders.service';
-import { UserService, User } from '../services/user.service';
+import { Customer, CustomersService } from '../services/customers.service';
 
 @Component({
   selector: 'app-order-form',
@@ -12,7 +12,7 @@ import { UserService, User } from '../services/user.service';
 })
 export class OrderFormComponent implements OnInit {
   products: Product[] = [];
-  customers: User[] = [];
+  customers: Customer[] = [];
   loading = false;
 
   form = this.fb.group({
@@ -22,11 +22,11 @@ export class OrderFormComponent implements OnInit {
 
   get items() { return this.form.get('items') as FormArray; }
 
-  constructor(private fb: FormBuilder, private prodSvc: ProductsService, private orderSvc: OrdersService, private userSvc: UserService, private router: Router) {}
+  constructor(private fb: FormBuilder, private prodSvc: ProductsService, private orderSvc: OrdersService, private customersSvc: CustomersService, private router: Router) {}
 
   ngOnInit(): void {
     this.prodSvc.list().subscribe(res => { this.products = res.items; if (!this.items.length) this.addItem(); });
-    this.userSvc.getAll().subscribe({ next: u => this.customers = u, error: ()=>{} });
+    this.customersSvc.list().subscribe({ next: u => this.customers = u, error: ()=>{} });
   }
 
   addItem(){

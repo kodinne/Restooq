@@ -176,9 +176,11 @@ export class PdvComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao finalizar venda:', err);
-        alert('Erro ao processar venda. Tente novamente.');
+        const msg = err?.error?.message || 'Erro ao processar venda. Tente novamente.';
+        alert(msg);
         this.processingPayment = false;
       }
     });
   }
 }
+

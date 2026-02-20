@@ -1,41 +1,66 @@
 .contato-page {
-  background: #ffffff;
+  background: linear-gradient(180deg, #f6f1ee 0%, #ece1db 100%);
 }
 
 .hero-contato {
   background: linear-gradient(135deg, var(--marrom-escuro) 0%, var(--marrom-medio-escuro) 100%);
   color: var(--branco-sujo);
-  padding: 80px 20px;
+  padding: 88px 20px 84px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 12% 22%, rgba(255, 255, 255, 0.16) 0%, transparent 36%),
+      radial-gradient(circle at 88% 74%, rgba(255, 255, 255, 0.12) 0%, transparent 32%);
+    pointer-events: none;
+  }
   
   .hero-content {
     max-width: 800px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
     
     i {
-      font-size: 64px;
-      display: block;
+      width: 96px;
+      height: 96px;
+      font-size: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.08);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 24px;
-      opacity: 0.9;
+      margin-inline: auto;
+      color: #fff7f2;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
     }
     
     h1 {
-      font-size: 48px;
+      font-size: clamp(30px, 4.6vw, 48px);
       font-weight: 800;
       margin: 0 0 16px 0;
       color: white;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
     
     .lead {
-      font-size: 20px;
+      font-size: clamp(16px, 2.1vw, 20px);
       opacity: 0.95;
       margin: 0;
+      color: #f3e9e4;
     }
   }
 }
 
 .contato-content {
-  padding: 80px 20px;
+  padding: 84px 20px;
   background: var(--bege-claro);
   
   .container {
@@ -51,10 +76,17 @@
   
   .form-section {
     .form-card {
-      background: white;
-      border-radius: 16px;
+      background: #ffffff;
+      border-radius: 18px;
       padding: 40px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 1px solid rgba(62, 39, 35, 0.08);
+      box-shadow: 0 18px 42px rgba(62, 39, 35, 0.12);
+      transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 22px 40px rgba(62, 39, 35, 0.14);
+      }
       
       h2 {
         font-size: 28px;
@@ -71,7 +103,7 @@
       }
       
       .subtitle {
-        color: #6b7a90;
+        color: #4d5d70;
         margin-bottom: 32px;
       }
       
@@ -101,16 +133,22 @@
             border-radius: 10px;
             font-size: 15px;
             color: #0f1d40;
+            background: #fcfaf8;
             transition: all 0.2s ease;
             
+            &:hover {
+              border-color: #d2dae8;
+            }
+
             &:focus {
               outline: none;
               border-color: #6B4423;
               box-shadow: 0 0 0 3px rgba(107, 68, 35, 0.1);
+              background: #fff;
             }
             
             &::placeholder {
-              color: #9fb3c8;
+              color: #7e8ca0;
             }
           }
           
@@ -126,6 +164,7 @@
           font-size: 16px;
           font-weight: 700;
           justify-content: center;
+          letter-spacing: 0.2px;
           
           &.coffee {
             background: linear-gradient(135deg, #6B4423 0%, #8B6F47 100%);
@@ -147,10 +186,17 @@
     gap: 24px;
     
     .info-card {
-      background: white;
-      border-radius: 16px;
+      background: #ffffff;
+      border-radius: 18px;
       padding: 32px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 1px solid rgba(62, 39, 35, 0.08);
+      box-shadow: 0 18px 42px rgba(62, 39, 35, 0.12);
+      transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 22px 40px rgba(62, 39, 35, 0.14);
+      }
       
       h3 {
         font-size: 20px;
@@ -170,10 +216,15 @@
         display: flex;
         gap: 16px;
         padding: 16px 0;
-        border-bottom: 1px solid #f5f7fb;
+        border-bottom: 1px solid #ece4df;
+        transition: transform 0.2s ease;
         
         &:last-child {
           border-bottom: none;
+        }
+
+        &:hover {
+          transform: translateX(2px);
         }
         
         .info-icon {
@@ -198,7 +249,7 @@
           h4 {
             font-size: 14px;
             font-weight: 600;
-            color: #0f1d40;
+            color: #1f2e50;
             margin: 0 0 4px 0;
           }
           
@@ -211,7 +262,7 @@
           
           small {
             font-size: 12px;
-            color: #6b7a90;
+            color: #4f6074;
           }
         }
       }
@@ -219,11 +270,12 @@
     
     .faq-card {
       background: linear-gradient(135deg, var(--marrom-medio-escuro) 0%, var(--marrom-acinzentado) 100%);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 32px;
       text-align: center;
       color: var(--branco-sujo);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 18px 42px rgba(62, 39, 35, 0.2);
       
       i {
         font-size: 48px;
@@ -243,18 +295,20 @@
         font-size: 14px;
         line-height: 1.6;
         margin-bottom: 20px;
-        opacity: 0.95;
+        color: #f6ede8;
       }
       
       .btn {
         width: 100%;
         justify-content: center;
-        background: var(--branco-sujo);
+        background: #f7efeb;
         color: var(--marrom-escuro);
+        border: 1px solid rgba(62, 39, 35, 0.18);
         
         &:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          box-shadow: 0 8px 16px rgba(0,0,0,0.22);
+          background: #fff8f5;
         }
       }
     }
@@ -310,6 +364,14 @@
   }
 }
 
+.form-group input:focus-visible,
+.form-group select:focus-visible,
+.form-group textarea:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid #6B4423;
+  outline-offset: 2px;
+}
+
 // RESPONSIVIDADE
 @media (max-width: 992px) {
   .hero-contato {
@@ -341,7 +403,9 @@
     
     .hero-content {
       i {
-        font-size: 48px;
+        width: 72px;
+        height: 72px;
+        font-size: 34px;
       }
       
       h1 {

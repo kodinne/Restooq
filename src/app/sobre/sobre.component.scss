@@ -1,5 +1,5 @@
 .sobre-page {
-  background: #ffffff;
+  background: linear-gradient(180deg, #f7f1ed 0%, #ece1db 100%);
 }
 
 .hero-sobre {
@@ -106,14 +106,15 @@
   }
   
   .value-card {
-    background: #f5f7fb;
+    background: #fff;
     border-radius: 16px;
     padding: 32px;
     transition: all 0.3s ease;
+    border: 1px solid rgba(62, 39, 35, 0.1);
     
     &:hover {
       transform: translateY(-8px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      box-shadow: 0 12px 28px rgba(62, 39, 35, 0.12);
     }
     
     .value-icon {
@@ -142,7 +143,7 @@
     p {
       font-size: 15px;
       line-height: 1.7;
-      color: #6b7a90;
+      color: #4f6074;
       margin: 0;
     }
   }
@@ -151,7 +152,7 @@
 .mission-section {
   padding: 80px 20px;
   background: linear-gradient(135deg, var(--marrom-rosado-caramelo) 0%, var(--marrom-acinzentado) 100%);
-  color: var(--marrom-escuro);
+  color: var(--branco-sujo);
   
   .mission-content {
     max-width: 800px;
@@ -177,6 +178,7 @@
       line-height: 1.8;
       margin-bottom: 32px;
       opacity: 0.95;
+      color: #fff2ea;
     }
     
     .btn {

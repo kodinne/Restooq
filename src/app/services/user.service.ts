@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from './api-base';
 
 export interface User {
   id: number;
@@ -20,7 +21,7 @@ export interface CreateUserDto{
   providedIn: 'root'
 })
 export class UserService {
-  private readonly apiUrl = 'http://localhost:3000/users';
+  private readonly apiUrl = `${API_BASE_URL}/users`;
 
 
   constructor(private http: HttpClient) { }
@@ -61,3 +62,4 @@ export class UserService {
   }
 
 }
+

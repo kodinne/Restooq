@@ -18,7 +18,7 @@
   }
   
   .action-btn {
-    background: white;
+    background: #ffffff;
     padding: 20px;
     border-radius: 12px;
     text-decoration: none;
@@ -26,9 +26,9 @@
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    border: 2px solid transparent;
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease, border-color 220ms ease;
+    box-shadow: 0 10px 24px rgba(62, 39, 35, 0.1);
+    border: 1px solid rgba(62, 39, 35, 0.12);
     cursor: pointer;
     
     i {
@@ -45,7 +45,7 @@
       &:hover {
         border-color: var(--marrom-medio-escuro);
         transform: translateY(-4px);
-        box-shadow: 0 6px 12px rgba(93, 64, 55, 0.2);
+        box-shadow: 0 16px 30px rgba(93, 64, 55, 0.18);
       }
     }
     
@@ -54,7 +54,7 @@
       &:hover {
         border-color: var(--marrom-acinzentado);
         transform: translateY(-4px);
-        box-shadow: 0 6px 12px rgba(141, 110, 99, 0.2);
+        box-shadow: 0 16px 30px rgba(141, 110, 99, 0.18);
       }
     }
     
@@ -63,7 +63,7 @@
       &:hover {
         border-color: var(--marrom-rosado-caramelo);
         transform: translateY(-4px);
-        box-shadow: 0 6px 12px rgba(161, 136, 127, 0.2);
+        box-shadow: 0 16px 30px rgba(161, 136, 127, 0.18);
       }
     }
     
@@ -72,26 +72,26 @@
       &:hover {
         border-color: #dc3545;
         transform: translateY(-4px);
-        box-shadow: 0 6px 12px rgba(220, 53, 69, 0.2);
+        box-shadow: 0 16px 30px rgba(220, 53, 69, 0.16);
       }
     }
   }
 }
 .cards { display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin:16px 0; }
-.card { background:#fff; border-radius:12px; padding:16px; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+.card { background:#fff; border-radius:12px; padding:16px; border: 1px solid rgba(62, 39, 35, 0.09); box-shadow:0 10px 24px rgba(62,39,35,.08); }
 .card .title { color:var(--text-secondary); font-weight:600; }
 .card .value { font-size:20px; margin-top:8px; color:var(--text-primary); }
 .grid { display:grid; grid-template-columns: 2fr 1fr; gap:16px; margin-bottom:16px; }
-.panel { background:#fff; border-radius:12px; padding:16px; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+.panel { background:#fff; border-radius:12px; padding:16px; border: 1px solid rgba(62,39,35,0.09); box-shadow:0 10px 24px rgba(62,39,35,.08); }
 .panel-title { font-weight:700; margin-bottom:12px; }
 .bars { display:flex; align-items:flex-end; gap:14px; height:200px; padding:8px; }
 .bar { width:30px; border-radius:6px 6px 0 0; }
 .bar.yellow { background:#f7d055; }
 .bar.blue { background:var(--primary-color); }
 .donut-shape { width:220px; height:220px; border-radius:50%; background:radial-gradient(circle at center, #f5f7fb 40%, var(--primary-color) 41%, var(--primary-color) 48%, #f5f7fb 49%); margin:0 auto; }
-.legend { list-style:none; padding:0; margin-top:12px; color:#6b7a90; }
+.legend { list-style:none; padding:0; margin-top:12px; color:#4f6074; font-weight: 600; }
 .table { width:100%; border-collapse:collapse; }
-.table th, .table td { padding:10px; border-bottom:1px solid #eef1f6; color:#0f1d40; }
+.table th, .table td { padding:10px; border-bottom:1px solid #e8ddd7; color:#2d3042; }
 .badge { display:inline-block; padding:4px 10px; border-radius:12px; font-size:12px; color:#fff; }
 .badge.warning { background: var(--warning); color: var(--marrom-escuro); }
 
@@ -115,6 +115,16 @@
   .cards{ grid-template-columns: repeat(2,1fr); }
   .grid{ grid-template-columns: 1fr; }
   .quick-actions .action-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .content {
+    padding: 12px;
+  }
+
+  .cards {
     grid-template-columns: 1fr;
   }
 }

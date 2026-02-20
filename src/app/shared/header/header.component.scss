@@ -1,0 +1,18 @@
+.d-flex.flex-wrap.justify-content-center.py-3.mb-4.border-bottom {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom-color: rgba(62, 39, 35, 0.14) !important;
+  border-radius: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.nav-pills .nav-link {
+  color: var(--text-secondary);
+  border-radius: 10px;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .nav-link:hover {
+  background: var(--marrom-medio-escuro);
+  color: var(--branco-sujo);
+}

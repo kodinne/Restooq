@@ -2,7 +2,7 @@
   <header class="page-header">
     <div class="title">Pedidos</div>
     <div class="actions">
-      <button class="btn" disabled>Exportar para Excel</button>
+      <button class="btn" (click)="exportCsv()">Exportar CSV</button>
       <button class="btn" disabled>Importar pedidos</button>
       <a class="btn primary" routerLink="/orders/new">+ Novo Pedido</a>
     </div>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from './api-base';
 
 export interface DashboardData {
   cards: { revenue: number; salesReturn: number; purchase: number; income: number };
@@ -10,8 +11,13 @@ export interface DashboardData {
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-  private readonly apiUrl = 'http://localhost:3000/dashboard';
+  private readonly apiUrl = `${API_BASE_URL}/dashboard`;
   constructor(private http: HttpClient) {}
-  load(): Observable<DashboardData> { return this.http.get<DashboardData>(this.apiUrl); }
+  load(period: 'all' | 'today' | '7d' | '30d' = 'all'): Observable<DashboardData> {
+    let params = new HttpParams();
+    if (period && period !== 'all') params = params.set('period', period);
+    return this.http.get<DashboardData>(this.apiUrl, { params });
+  }
 }
+
 

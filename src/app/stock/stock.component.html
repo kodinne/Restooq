@@ -18,11 +18,12 @@
     <table class="table">
       <thead>
         <tr>
-          <th>SKU</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Status</th><th>Ações</th>
+          <th>ID</th><th>SKU</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Status</th><th>Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let p of products">
+          <td>{{p.id}}</td>
           <td>{{p.sku}}</td>
           <td>{{p.name}}</td>
           <td>{{p.category || '-'}}</td>
@@ -44,3 +45,5 @@
     </div>
   </div>
 </div>
+
+

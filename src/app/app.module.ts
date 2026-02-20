@@ -29,6 +29,8 @@ import { ShellComponent } from './shared/shell/shell.component';
 import { ProductFormComponent } from './products/product-form.component';
 import { OrderFormComponent } from './orders/order-form.component';
 import { PublicHeaderComponent } from './shared/public-header/public-header.component';
+import { CustomersComponent } from './customers/customers.component';
+import { ReturnsHistoryComponent } from './returns-history/returns-history.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { PublicHeaderComponent } from './shared/public-header/public-header.comp
     ShellComponent,
     ProductFormComponent,
     OrderFormComponent,
-    PublicHeaderComponent
+    PublicHeaderComponent,
+    CustomersComponent,
+    ReturnsHistoryComponent
   ],
   imports: [
     BrowserModule,
