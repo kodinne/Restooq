@@ -31,6 +31,7 @@ import { OrderFormComponent } from './orders/order-form.component';
 import { PublicHeaderComponent } from './shared/public-header/public-header.component';
 import { CustomersComponent } from './customers/customers.component';
 import { ReturnsHistoryComponent } from './returns-history/returns-history.component';
+import { ReportsComponent } from './reports/reports.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { ReturnsHistoryComponent } from './returns-history/returns-history.compo
     OrderFormComponent,
     PublicHeaderComponent,
     CustomersComponent,
-    ReturnsHistoryComponent
+    ReturnsHistoryComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,

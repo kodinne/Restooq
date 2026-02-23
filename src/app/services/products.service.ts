@@ -35,5 +35,9 @@ export class ProductsService {
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  updateStock(id: number, stock: number): Observable<Product> {
+    return this.http.patch<Product>(`${this.apiUrl}/${id}/stock/${stock}`, {});
+  }
 }
 

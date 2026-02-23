@@ -13,8 +13,8 @@
     <div class="filters">
       <select [(ngModel)]="status" (change)="page=1; load()">
         <option value="">Todos</option>
-        <option value="pending">Pendente</option>
-        <option value="completed">Concluído</option>
+        <option value="returned">Devolvido</option>
+        <option value="completed">Concluido</option>
       </select>
       <button class="btn" (click)="page=1; load()">Filtrar</button>
     </div>
@@ -30,7 +30,7 @@
           <th>Total</th>
           <th>Itens</th>
           <th>Status</th>
-          <th>Ações</th>
+          <th>Acoes</th>
         </tr>
       </thead>
       <tbody>
@@ -46,9 +46,13 @@
                 <i class="bi" [class.bi-chevron-down]="!showDetails[o.id]" [class.bi-chevron-up]="showDetails[o.id]"></i>
               </button>
             </td>
-            <td><span class="badge" [class.completed]="o.status==='completed'" [class.pending]="o.status==='pending'">{{ o.status==='completed' ? 'Concluído' : 'Pendente' }}</span></td>
             <td>
-              <button class="btn-icon btn-return" (click)="registerReturn(o)" title="Registrar Devolução">
+              <span class="badge" [class.completed]="o.status==='completed'" [class.pending]="o.status==='pending'" [class.returned]="o.status==='returned'">
+                {{ o.status==='completed' ? 'Concluido' : (o.status==='returned' ? 'Devolvido' : 'Pendente') }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-icon btn-return" (click)="registerReturn(o)" title="Registrar Devolucao">
                 <i class="bi bi-arrow-return-left"></i>
               </button>
             </td>
@@ -62,7 +66,7 @@
                     <tr>
                       <th>Produto</th>
                       <th>Quantidade</th>
-                      <th>Preço Unit.</th>
+                      <th>Preco Unit.</th>
                       <th>Subtotal</th>
                     </tr>
                   </thead>
@@ -83,8 +87,8 @@
     </table>
     <div class="pagination">
       <button class="btn" (click)="changePage(page-1)">Anterior</button>
-      <span>Página {{page}} de {{ pagesTotal() }}</span>
-      <button class="btn" (click)="changePage(page+1)">Próxima</button>
+      <span>Pagina {{page}} de {{ pagesTotal() }}</span>
+      <button class="btn" (click)="changePage(page+1)">Proxima</button>
     </div>
   </div>
 </div>

@@ -152,6 +152,11 @@
     background: var(--warning);
     color: var(--marrom-escuro);
   }
+
+  &.returned {
+    background: #dc3545;
+    color: white;
+  }
 }
 
 .btn-link {
@@ -335,3 +340,4 @@
     flex-wrap: wrap;
   }
 }
+

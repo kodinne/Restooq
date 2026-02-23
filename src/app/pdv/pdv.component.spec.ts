@@ -1,4 +1,6 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { PdvComponent } from './pdv.component';
 
@@ -8,7 +10,8 @@ describe('PdvComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PdvComponent]
+      declarations: [PdvComponent],
+      imports: [FormsModule, HttpClientTestingModule]
     });
     fixture = TestBed.createComponent(PdvComponent);
     component = fixture.componentInstance;

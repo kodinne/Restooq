@@ -17,6 +17,10 @@
           <i class="bi bi-cart3"></i>
           <span>Nova Venda (PDV)</span>
         </a>
+        <a routerLink="/reports" class="action-btn manage">
+          <i class="bi bi-file-earmark-bar-graph"></i>
+          <span>Relatorios</span>
+        </a>
         <button (click)="registerReturn()" class="action-btn return">
           <i class="bi bi-arrow-return-left"></i>
           <span>Registrar Devolução</span>
@@ -31,6 +35,10 @@
         <option value="7d">7 dias</option>
         <option value="30d">30 dias</option>
       </select>
+      <button class="btn" (click)="resetCharts()">
+        <i class="bi bi-eraser"></i>
+        Zerar graficos
+      </button>
     </section>
 
     <section class="cards" *ngIf="data">
@@ -43,11 +51,11 @@
     <section class="grid">
       <div class="panel bar-chart">
         <div class="panel-title">Mais vendidos (Quantidade)</div>
-        <canvas baseChart [data]="barData" [options]="barOptions" chartType="bar"></canvas>
+        <canvas baseChart [data]="barData" [options]="barOptions" [type]="'bar'"></canvas>
       </div>
       <div class="panel donut">
         <div class="panel-title">Participação por produto</div>
-        <canvas baseChart [data]="doughnutData" chartType="doughnut"></canvas>
+        <canvas baseChart [data]="doughnutData" [type]="'doughnut'"></canvas>
         <ul class="legend" *ngIf="data">
           <li *ngFor="let t of data.topSelling">{{t.name}} — {{t.qty}}</li>
         </ul>
@@ -71,9 +79,15 @@
               <td>{{p.stock}}</td>
               <td><span class="badge warning">Baixo</span></td>
               <td>
-                <button class="btn-icon" title="Reabastecer" (click)="restock(p.id)">
+                <button class="btn-icon" title="Reabastecer" (click)="restock(p.id, p.stock)">
                   <i class="bi bi-plus-circle"></i>
                 </button>
+              </td>
+            </tr>
+            <tr *ngIf="!data.stockAlert.length">
+              <td colspan="6">
+                Nenhum item com estoque baixo.
+                <button class="link-btn" (click)="goToStock()">Ver estoque</button>
               </td>
             </tr>
           </tbody>
@@ -98,5 +112,7 @@
     </section>
   </main>
 </div>
+
+
 
 

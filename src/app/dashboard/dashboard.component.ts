@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardData, DashboardService } from '../services/dashboard.service';
 import { ChartData, ChartOptions } from 'chart.js';
-import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { ProductsService } from '../services/products.service';
 import { API_BASE_URL } from '../services/api-base';
+import { Order, OrdersService } from '../services/orders.service';
+import { ProductsService } from '../services/products.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,15 +18,20 @@ export class DashboardComponent implements OnInit {
   data?: DashboardData;
   loading = false;
   barData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: 'Quantidade', backgroundColor: '#5D4037' }] };
-  barOptions: ChartOptions<'bar'> = { responsive: true, scales: { y: { beginAtZero: true } } };
-  doughnutData: ChartData<'doughnut'> = { labels: [], datasets: [{ data: [], backgroundColor: ['#5D4037', '#8D6E63', '#A1887F', '#6D4C41', '#4E342E'] }] };
+  barOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    scales: { y: { beginAtZero: true } },
+    plugins: { legend: { display: false } }
+  };
+  doughnutData: ChartData<'doughnut'> = { labels: [], datasets: [{ data: [], label: 'Participacao', backgroundColor: ['#5D4037', '#8D6E63', '#A1887F', '#6D4C41', '#4E342E'] }] };
   donutPercent = 0;
 
   constructor(
-    private svc: DashboardService, 
-    private router: Router,
+    private svc: DashboardService,
     private http: HttpClient,
-    private productsService: ProductsService
+    private ordersService: OrdersService,
+    private productsService: ProductsService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -36,99 +42,142 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     this.svc.load(this.period).subscribe({
       next: (d) => {
-        this.data = d;
-        // Charts from API
+        const topSelling = (d.topSelling ?? []).map((t: any, index) => ({
+          name: this.resolveProductName(t, index),
+          qty: this.resolveQuantity(t)
+        }));
+
+        this.data = {
+          ...d,
+          topSelling
+        };
+
         this.barData = {
-          labels: d.topSelling.map(t => t.name),
-          datasets: [{ data: d.topSelling.map(t => t.qty), label: 'Quantidade', backgroundColor: '#5D4037' }]
+          labels: topSelling.map(t => t.name),
+          datasets: [{ data: topSelling.map(t => t.qty), label: 'Quantidade', backgroundColor: '#5D4037' }]
         };
         this.doughnutData = {
-          labels: d.topSelling.map(t => t.name),
-          datasets: [{ data: d.topSelling.map(t => t.qty), backgroundColor: ['#5D4037', '#8D6E63', '#A1887F', '#6D4C41', '#4E342E'] }]
+          labels: topSelling.map(t => t.name),
+          datasets: [{ data: topSelling.map(t => t.qty), label: 'Participacao', backgroundColor: ['#5D4037', '#8D6E63', '#A1887F', '#6D4C41', '#4E342E'] }]
         };
-        const total = d.topSelling.reduce((s, t) => s + t.qty, 0) || 1;
-        this.donutPercent = Math.round((d.topSelling[0]?.qty || 0) / total * 100);
+        const total = topSelling.reduce((s, t) => s + t.qty, 0) || 1;
+        this.donutPercent = Math.round((topSelling[0]?.qty || 0) / total * 100);
         this.loading = false;
       },
       error: () => { this.loading = false; }
     });
   }
 
-  restock(productId: number): void {
+  restock(productId: number, currentStock: number): void {
     const quantity = prompt('Quantidade a adicionar ao estoque:');
-    if (quantity && !isNaN(Number(quantity))) {
-      alert(`${quantity} unidades serão adicionadas ao produto ID ${productId}`);
-      // Aqui você pode adicionar a lógica de reabastecimento
-      this.loadDashboard(); // Recarrega o dashboard
+    if (!quantity || isNaN(Number(quantity))) return;
+
+    const qty = Number(quantity);
+    if (!Number.isInteger(qty) || qty <= 0) {
+      alert('Digite um numero inteiro maior que zero.');
+      return;
+    }
+
+    const newStock = currentStock + qty;
+    this.productsService.updateStock(productId, newStock).subscribe({
+      next: () => {
+        alert(`Estoque atualizado com sucesso. Novo estoque: ${newStock}`);
+        this.loadDashboard();
+      },
+      error: (err) => {
+        alert(this.extractErrorMessage(err, 'Erro ao atualizar estoque.'));
+      }
+    });
+  }
+
+  goToStock(): void {
+    this.router.navigate(['/stock']);
+  }
+
+  resetCharts(): void {
+    this.barData = {
+      labels: [],
+      datasets: [{ data: [], label: 'Quantidade', backgroundColor: '#5D4037' }]
+    };
+    this.doughnutData = {
+      labels: [],
+      datasets: [{
+        data: [],
+        label: 'Participacao',
+        backgroundColor: ['#5D4037', '#8D6E63', '#A1887F', '#6D4C41', '#4E342E']
+      }]
+    };
+    this.donutPercent = 0;
+    if (this.data) {
+      this.data = { ...this.data, topSelling: [] };
     }
   }
 
   registerReturn(): void {
-    // Busca lista de produtos
-    this.productsService.list({ limit: 1000 }).subscribe({
-      next: (response) => {
-        const products = response.items;
-        
-        // Pede informações da devolução
-        const orderIdInput = prompt('ID do pedido (ex: 3 ou #3):');
-        const orderId = this.parseId(orderIdInput);
-        if (!orderId) {
-          alert('ID do pedido inválido!');
+    const orderIdInput = prompt('ID do pedido (ex: 3 ou #3):');
+    const orderId = this.parseId(orderIdInput);
+    if (!orderId) {
+      alert('ID do pedido invalido!');
+      return;
+    }
+
+    this.ordersService.list({ page: 1, limit: 100, q: String(orderId) }).subscribe({
+      next: (res) => {
+        const order = (res.items || []).find((o: Order) => Number(o.id) === orderId);
+        if (!order) {
+          alert('Pedido nao encontrado!');
           return;
         }
-        
-        // Mostra lista de produtos disponíveis
-        let productsMessage = 'Produtos disponíveis:\n\n';
-        products.forEach(p => {
-          productsMessage += `ID: ${p.id} - ${p.name} (${p.sku})\n`;
+
+        if (!order.items || !order.items.length) {
+          alert('Este pedido nao possui itens para devolucao.');
+          return;
+        }
+
+        let itemsMessage = `Pedido #${order.id} - ${order.customerName || 'Cliente'}\n\nItens:\n`;
+        order.items.forEach((item, index) => {
+          itemsMessage += `${index + 1}. ${item.productName || ('Produto ' + item.productId)} - Qtd: ${item.quantity}\n`;
         });
-        alert(productsMessage);
-        
-        const productIdInput = prompt('ID do produto devolvido (ex: 3 ou #3):');
-        const productId = this.parseId(productIdInput);
-        if (!productId) {
-          alert('ID do produto inválido!');
+        alert(itemsMessage);
+
+        const itemIndexInput = prompt(`Digite o numero do item a devolver (1 a ${order.items.length}):`);
+        const itemIndex = Number(itemIndexInput) - 1;
+        if (!Number.isInteger(itemIndex) || itemIndex < 0 || itemIndex >= order.items.length) {
+          alert('Item invalido!');
           return;
         }
-        
-        const product = products.find(p => p.id === productId);
-        if (!product) {
-          alert('Produto não encontrado!');
+
+        const item = order.items[itemIndex];
+        const quantityInput = prompt(`Quantidade devolvida (maximo: ${item.quantity}):`);
+        const quantity = Number(quantityInput);
+        if (!Number.isInteger(quantity) || quantity <= 0 || quantity > item.quantity) {
+          alert('Quantidade invalida!');
           return;
         }
-        
-        const quantity = prompt('Quantidade devolvida:');
-        if (!quantity || isNaN(Number(quantity)) || Number(quantity) <= 0) {
-          alert('Quantidade inválida!');
-          return;
-        }
-        
-        const reason = prompt('Motivo da devolução:', 'Cliente solicitou');
-        const value = Number(quantity) * product.price;
-        
-        // Registra a devolução no backend
+
+        const reason = prompt('Motivo da devolucao:', 'Cliente solicitou');
+        const value = Number(item.unitPrice ?? 0) * quantity;
+
         this.http.post(this.returnsUrl, {
           orderId,
-          productId,
-          quantity: Number(quantity),
+          productId: item.productId,
+          quantity,
           reason: reason || 'Sem motivo informado',
-          value: value
+          value
         }).subscribe({
           next: () => {
-            alert(`Devolução registrada com sucesso!\n\nProduto: ${product.name}\nQuantidade: ${quantity}\nValor: R$ ${value.toFixed(2)}`);
-            this.loadDashboard(); // Recarrega o dashboard
+            alert(`Devolucao registrada com sucesso!\n\nProduto: ${item.productName || item.productId}\nQuantidade: ${quantity}\nValor: R$ ${value.toFixed(2)}`);
+            this.loadDashboard();
           },
           error: (err) => {
-            console.error('Erro ao registrar devolução:', err);
-            const msg = err?.error?.message || 'Erro ao registrar devolucao. Tente novamente.';
-            alert(msg);
+            console.error('Erro ao registrar devolucao:', err);
+            alert(this.extractErrorMessage(err, 'Erro ao registrar devolucao. Tente novamente.'));
           }
         });
       },
       error: (err) => {
-        console.error('Erro ao buscar produtos:', err);
-        const msg = err?.error?.message || 'Erro ao buscar produtos. Tente novamente.';
-        alert(msg);
+        console.error('Erro ao buscar pedido:', err);
+        alert(this.extractErrorMessage(err, 'Erro ao buscar pedido. Tente novamente.'));
       }
     });
   }
@@ -140,5 +189,21 @@ export class DashboardComponent implements OnInit {
     const parsed = Number(digits);
     return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
   }
-}
 
+  private resolveProductName(item: { name?: string; productName?: string }, index: number): string {
+    const value = (item?.name ?? item?.productName ?? '').toString().trim();
+    return value || `Produto ${index + 1}`;
+  }
+
+  private resolveQuantity(item: { qty?: number; quantity?: number }): number {
+    const value = Number(item?.qty ?? item?.quantity ?? 0);
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  private extractErrorMessage(err: any, fallback: string): string {
+    return err?.error?.message
+      || err?.error?.error
+      || err?.message
+      || fallback;
+  }
+}

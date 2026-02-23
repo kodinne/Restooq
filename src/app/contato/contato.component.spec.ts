@@ -1,4 +1,6 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { ContatoComponent } from './contato.component';
 
@@ -8,7 +10,9 @@ describe('ContatoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ContatoComponent]
+      declarations: [ContatoComponent],
+      imports: [RouterTestingModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });
     fixture = TestBed.createComponent(ContatoComponent);
     component = fixture.componentInstance;

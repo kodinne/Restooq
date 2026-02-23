@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,19 +25,20 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.loginForm.invalid) {
+    if (this.loginForm.invalid || this.submitting) {
       this.loginForm.markAllAsTouched();
       return;
     }
 
     const { email, password } = this.loginForm.value;
+    this.submitting = true;
+    this.errorMsg = null;
 
-    // Aqui você envia para seu serviço de autenticação
-    this.authService.login( (email || '').trim().toLowerCase(), password ).subscribe({
+    this.authService.login((email || '').trim().toLowerCase(), password).subscribe({
       next: (res: any) => {
-        // Backend retorna { token, user }
-        if (res?.token) {
-          localStorage.setItem('token', res.token);
+        const token = res?.access_token || res?.token || null;
+        if (token) {
+          localStorage.setItem('token', token);
         }
         if (res?.user?.name) {
           localStorage.setItem('userName', res.user.name);
@@ -48,10 +48,9 @@ export class LoginComponent {
       },
       error: (err: any) => {
         console.error('Erro no login:', err);
-        this.errorMsg = err?.error?.message || 'Usuário ou senha inválidos.';
+        this.errorMsg = err?.error?.message || 'Usuario ou senha invalidos.';
         this.submitting = false;
       },
     });
   }
 }
-

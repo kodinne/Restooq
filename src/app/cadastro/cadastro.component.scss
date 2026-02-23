@@ -348,3 +348,23 @@
     }
   }
 }
+
+/* UI Polish Layer */
+.cadastro-container {
+  background: linear-gradient(180deg, #ffffff 0%, #fcf7f3 100%);
+}
+
+.cadastro-form-section .form-wrapper {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(62, 39, 35, 0.1);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.cadastro-form-section .form-wrapper .form-header i {
+  text-shadow: 0 10px 22px rgba(62, 39, 35, 0.2);
+}
+
+.cadastro-form-section .form-wrapper .btn-submit {
+  letter-spacing: 0.2px;
+}

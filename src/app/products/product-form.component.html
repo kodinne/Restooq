@@ -13,13 +13,13 @@
       </div>
       
       <h2>Cadastro de Produto</h2>
-      <p class="subtitle">Preencha as informações do produto</p>
+      <p class="subtitle">Preencha as informacoes do produto</p>
 
       <form [formGroup]="form" (ngSubmit)="submit()" class="product-form">
         <div class="form-grid">
           <div class="form-group">
             <label for="sku">
-              <i class="bi bi-upc-scan"></i> SKU / Código
+              <i class="bi bi-upc-scan"></i> SKU / Codigo
             </label>
             <input 
               id="sku" 
@@ -30,7 +30,7 @@
               style="background-color: #f5f5f5; cursor: not-allowed;"
             />
             <small style="color: #666; font-size: 12px;">
-              O código SKU é gerado automaticamente
+              O codigo SKU e gerado automaticamente
             </small>
           </div>
 
@@ -46,7 +46,10 @@
               [class.error]="form.get('name')?.touched && form.get('name')?.errors"
             />
             <small class="error-msg" *ngIf="form.get('name')?.touched && form.get('name')?.errors?.['required']">
-              Nome é obrigatório
+              Nome e obrigatorio
+            </small>
+            <small class="error-msg" *ngIf="form.get('name')?.touched && form.get('name')?.errors?.['duplicate']">
+              {{ duplicateNameMsg || 'Nao e possivel cadastrar: este produto ja existe.' }}
             </small>
           </div>
 
@@ -54,30 +57,32 @@
             <label for="category">
               <i class="bi bi-tag"></i> Categoria
             </label>
-            <select id="category" formControlName="category">
+            <select id="category" formControlName="category" required [class.error]="form.get('category')?.touched && form.get('category')?.errors">
               <option value="">Selecione uma categoria</option>
-              <option value="Eletrônicos">Eletrônicos</option>
+              <option value="Eletronicos">Eletronicos</option>
               <option value="Alimentos">Alimentos</option>
               <option value="Bebidas">Bebidas</option>
               <option value="Limpeza">Limpeza</option>
               <option value="Higiene">Higiene</option>
               <option value="Outros">Outros</option>
             </select>
+            <small class="error-msg" *ngIf="form.get('category')?.touched && form.get('category')?.errors?.['required']">
+              Categoria e obrigatoria
+            </small>
           </div>
         </div>
 
-        <!-- SEÇÃO DE PRECIFICAÇÃO -->
         <div class="pricing-section">
           <h3 class="section-title">
             <i class="bi bi-calculator"></i>
-            Precificação
+            Precificacao
           </h3>
-          <p class="section-subtitle">Configure o preço de compra e margem de lucro. Os valores serão calculados automaticamente.</p>
+          <p class="section-subtitle">Configure o preco de compra e margem de lucro. Os valores serao calculados automaticamente.</p>
 
           <div class="pricing-grid">
             <div class="form-group">
               <label for="costPrice">
-                <i class="bi bi-cash-coin"></i> Preço de Compra (R$)
+                <i class="bi bi-cash-coin"></i> Preco de Compra (R$)
               </label>
               <input 
                 id="costPrice" 
@@ -85,10 +90,16 @@
                 formControlName="costPrice" 
                 placeholder="0.00"
                 step="0.01"
-                min="0"
+                min="0.01"
                 [class.error]="form.get('costPrice')?.touched && form.get('costPrice')?.errors"
               />
-              <small class="help-text">Quanto você pagou pelo produto</small>
+              <small class="help-text">Quanto voce pagou pelo produto</small>
+              <small class="error-msg" *ngIf="form.get('costPrice')?.touched && form.get('costPrice')?.errors?.['required']">
+                Coloque o preco de compra
+              </small>
+              <small class="error-msg" *ngIf="form.get('costPrice')?.touched && form.get('costPrice')?.errors?.['min']">
+                Preco de compra deve ser maior que zero
+              </small>
             </div>
 
             <div class="form-group">
@@ -109,7 +120,7 @@
 
             <div class="form-group price-result">
               <label for="price">
-                <i class="bi bi-currency-dollar"></i> Preço de Venda (R$)
+                <i class="bi bi-currency-dollar"></i> Preco de Venda (R$)
               </label>
               <input 
                 id="price" 
@@ -117,10 +128,16 @@
                 formControlName="price" 
                 placeholder="0.00"
                 step="0.01"
-                min="0"
+                min="0.01"
                 [class.error]="form.get('price')?.touched && form.get('price')?.errors"
               />
               <small class="help-text calculated">Calculado automaticamente ou digite manualmente</small>
+              <small class="error-msg" *ngIf="form.get('price')?.touched && form.get('price')?.errors?.['required']">
+                Coloque o preco de venda
+              </small>
+              <small class="error-msg" *ngIf="form.get('price')?.touched && form.get('price')?.errors?.['min']">
+                Preco de venda deve ser maior que zero
+              </small>
             </div>
           </div>
         </div>
@@ -134,14 +151,14 @@
             type="number" 
             formControlName="stock" 
             placeholder="0"
-            min="0"
+            min="1"
             [class.error]="form.get('stock')?.touched && form.get('stock')?.errors"
           />
           <small class="error-msg" *ngIf="form.get('stock')?.touched && form.get('stock')?.errors?.['required']">
-            Quantidade é obrigatória
+            Quantidade e obrigatoria
           </small>
           <small class="error-msg" *ngIf="form.get('stock')?.touched && form.get('stock')?.errors?.['min']">
-            Quantidade deve ser maior ou igual a zero
+            Quantidade deve ser maior que zero
           </small>
         </div>
 
@@ -169,7 +186,7 @@
         <i class="bi bi-lightbulb"></i>
         <h3>Dicas para Cadastro</h3>
         <ul>
-          <li>Use SKUs únicos para cada produto</li>
+          <li>Use SKUs unicos para cada produto</li>
           <li>Seja descritivo no nome do produto</li>
           <li>Categorize corretamente para facilitar buscas</li>
           <li>Mantenha o estoque sempre atualizado</li>
@@ -178,7 +195,7 @@
 
       <div class="info-card coffee-theme">
         <i class="bi bi-boxes"></i>
-        <h3>Organização</h3>
+        <h3>Organizacao</h3>
         <p>Use categorias para organizar melhor seus produtos e facilitar buscas.</p>
       </div>
     </div>

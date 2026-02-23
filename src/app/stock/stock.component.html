@@ -22,8 +22,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let p of products">
-          <td>{{p.id}}</td>
+        <tr *ngFor="let p of products; let i = index">
+          <td>{{displayId(i)}}</td>
           <td>{{p.sku}}</td>
           <td>{{p.name}}</td>
           <td>{{p.category || '-'}}</td>

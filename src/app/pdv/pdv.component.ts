@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ProductsService, Product } from '../services/products.service';
 import { OrdersService } from '../services/orders.service';
-import { Router } from '@angular/router';
 
 interface CartItem {
   product: Product;
@@ -15,24 +14,26 @@ interface CartItem {
   styleUrls: ['./pdv.component.scss']
 })
 export class PdvComponent implements OnInit {
+  @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
+
   products: Product[] = [];
   cart: CartItem[] = [];
-  searchTerm: string = '';
+  searchTerm = '';
   loading = false;
   processingPayment = false;
-  
-  // Campos do cliente
-  customerName: string = '';
-  customerId: number = 1; // ID padrão do cliente
-  
-  // Campos de pagamento
+
+  customerName = '';
+  customerId = 1;
+
   paymentMethod: 'cash' | 'card' | 'pix' = 'cash';
-  cashReceived: number = 0;
-  
+  cashReceived = 0;
+
+  toastMessage = '';
+  shortcutsVisible = false;
+
   constructor(
     private productsService: ProductsService,
-    private ordersService: OrdersService,
-    private router: Router
+    private ordersService: OrdersService
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +45,9 @@ export class PdvComponent implements OnInit {
     this.productsService.list({ limit: 100 }).subscribe({
       next: (res) => {
         this.products = res.items.filter(p => p.status === 'active' && p.stock > 0);
+        if (this.lowStockProducts.length) {
+          this.showToast(`${this.lowStockProducts.length} produto(s) com estoque baixo.`);
+        }
         this.loading = false;
       },
       error: () => {
@@ -55,27 +59,31 @@ export class PdvComponent implements OnInit {
   get filteredProducts(): Product[] {
     if (!this.searchTerm) return this.products;
     const term = this.searchTerm.toLowerCase();
-    return this.products.filter(p => 
-      p.name.toLowerCase().includes(term) || 
-      p.sku.toLowerCase().includes(term) ||
-      (p.category && p.category.toLowerCase().includes(term))
+    return this.products.filter(p =>
+      p.name.toLowerCase().includes(term)
+      || p.sku.toLowerCase().includes(term)
+      || (p.category && p.category.toLowerCase().includes(term))
     );
+  }
+
+  get lowStockProducts(): Product[] {
+    return this.products.filter(p => p.stock <= 5);
   }
 
   addToCart(product: Product): void {
     if (!product.id) {
-      alert('Produto inválido!');
+      this.showToast('Produto invalido.');
       return;
     }
-    
+
     const existingItem = this.cart.find(item => item.product.id === product.id);
-    
+
     if (existingItem) {
       if (existingItem.quantity < product.stock) {
         existingItem.quantity++;
         existingItem.subtotal = existingItem.quantity * product.price;
       } else {
-        alert('Estoque insuficiente!');
+        this.showToast('Estoque insuficiente.');
       }
     } else {
       this.cart.push({
@@ -96,7 +104,7 @@ export class PdvComponent implements OnInit {
       this.removeFromCart(index);
       return;
     }
-    
+
     if (quantity <= item.product.stock) {
       item.quantity = quantity;
       item.subtotal = item.quantity * item.product.price;
@@ -138,19 +146,29 @@ export class PdvComponent implements OnInit {
     this.cashReceived = 0;
   }
 
+  quickAddFirstFiltered(): void {
+    const first = this.filteredProducts[0];
+    if (!first) {
+      this.showToast('Nenhum produto encontrado para adicionar.');
+      return;
+    }
+    this.addToCart(first);
+    this.showToast(`${first.name} adicionado ao carrinho.`);
+  }
+
   finalizeSale(): void {
     if (this.cart.length === 0) {
-      alert('Carrinho vazio!');
+      this.showToast('Carrinho vazio.');
       return;
     }
 
     if (this.paymentMethod === 'cash' && this.cashReceived < this.total) {
-      alert('Valor recebido insuficiente!');
+      this.showToast('Valor recebido insuficiente.');
       return;
     }
 
     this.processingPayment = true;
-    
+
     const orderItems = this.cart
       .filter(item => item.product.id !== undefined)
       .map(item => ({
@@ -158,8 +176,8 @@ export class PdvComponent implements OnInit {
         quantity: item.quantity
       }));
 
-    if (orderItems.length === 0) {
-      alert('Nenhum produto válido no carrinho!');
+    if (!orderItems.length) {
+      this.showToast('Nenhum produto valido no carrinho.');
       this.processingPayment = false;
       return;
     }
@@ -169,18 +187,53 @@ export class PdvComponent implements OnInit {
       items: orderItems
     }).subscribe({
       next: () => {
-        alert('Venda realizada com sucesso!');
+        this.showToast('Venda realizada com sucesso.');
         this.clearCart();
         this.processingPayment = false;
-        this.loadProducts(); // Recarrega produtos para atualizar estoque
+        this.loadProducts();
       },
       error: (err) => {
-        console.error('Erro ao finalizar venda:', err);
         const msg = err?.error?.message || 'Erro ao processar venda. Tente novamente.';
-        alert(msg);
+        this.showToast(msg);
         this.processingPayment = false;
       }
     });
   }
-}
 
+  focusSearch(): void {
+    this.searchInput?.nativeElement.focus();
+  }
+
+  toggleShortcuts(): void {
+    this.shortcutsVisible = !this.shortcutsVisible;
+  }
+
+  private showToast(message: string): void {
+    this.toastMessage = message;
+    setTimeout(() => {
+      if (this.toastMessage === message) this.toastMessage = '';
+    }, 3000);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleShortcuts(event: KeyboardEvent): void {
+    if (event.key === 'F2') {
+      event.preventDefault();
+      this.focusSearch();
+      return;
+    }
+
+    if (event.key === 'F4') {
+      event.preventDefault();
+      if (!this.processingPayment) this.finalizeSale();
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      if (this.cart.length) {
+        this.clearCart();
+        this.showToast('Carrinho limpo.');
+      }
+    }
+  }
+}

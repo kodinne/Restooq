@@ -2,26 +2,43 @@
   <div class="pdv-header">
     <div class="header-content">
       <h1><i class="bi bi-cup-hot"></i> PDV - Ponto de Venda</h1>
-      <p class="subtitle">Sistema de vendas rápido e eficiente</p>
+      <p class="subtitle">Sistema de vendas rapido e eficiente</p>
+      <button class="shortcuts-toggle" (click)="toggleShortcuts()">
+        <i class="bi bi-keyboard"></i> Atalhos
+      </button>
+      <div class="shortcuts" *ngIf="shortcutsVisible">
+        <span><strong>F2</strong> Buscar produto</span>
+        <span><strong>F4</strong> Finalizar venda</span>
+        <span><strong>Esc</strong> Limpar carrinho</span>
+      </div>
     </div>
   </div>
 
+  <div class="toast" *ngIf="toastMessage">{{toastMessage}}</div>
+
   <div class="pdv-layout">
-    <!-- COLUNA ESQUERDA: PRODUTOS -->
     <div class="products-section">
       <div class="search-box">
         <i class="bi bi-search"></i>
-        <input 
-          type="text" 
-          [(ngModel)]="searchTerm" 
-          placeholder="Buscar produto por nome, SKU ou categoria..."
+        <input
+          #searchInput
+          type="text"
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="quickAddFirstFiltered()"
+          placeholder="Buscar produto por nome, SKU ou categoria... (Enter adiciona o primeiro)"
           class="search-input"
         />
       </div>
 
+      <div class="stock-alert" *ngIf="lowStockProducts.length">
+        <i class="bi bi-exclamation-triangle"></i>
+        Estoque baixo em {{lowStockProducts.length}} produto(s):
+        <strong>{{lowStockProducts[0].name}}</strong><span *ngIf="lowStockProducts.length > 1"> e outros</span>
+      </div>
+
       <div class="products-grid" *ngIf="!loading">
-        <div 
-          *ngFor="let product of filteredProducts" 
+        <div
+          *ngFor="let product of filteredProducts"
           class="product-card"
           (click)="addToCart(product)"
           [class.low-stock]="product.stock <= 5"
@@ -53,7 +70,6 @@
       </div>
     </div>
 
-    <!-- COLUNA DIREITA: CARRINHO E PAGAMENTO -->
     <div class="cart-section">
       <div class="cart-header">
         <h2><i class="bi bi-cart3"></i> Carrinho</h2>
@@ -71,28 +87,15 @@
               <p class="item-price">{{item.product.price | currency:'BRL'}} cada</p>
             </div>
           </div>
-          
+
           <div class="item-controls">
             <div class="quantity-control">
-              <button (click)="decrementQuantity(item)" class="qty-btn">
-                <i class="bi bi-dash"></i>
-              </button>
-              <input 
-                type="number" 
-                [value]="item.quantity"
-                (change)="updateQuantity(item, +$any($event.target).value)"
-                min="1"
-                [max]="item.product.stock"
-                class="qty-input"
-              />
-              <button (click)="incrementQuantity(item)" class="qty-btn">
-                <i class="bi bi-plus"></i>
-              </button>
+              <button (click)="decrementQuantity(item)" class="qty-btn"><i class="bi bi-dash"></i></button>
+              <input type="number" [value]="item.quantity" (change)="updateQuantity(item, +$any($event.target).value)" min="1" [max]="item.product.stock" class="qty-input" />
+              <button (click)="incrementQuantity(item)" class="qty-btn"><i class="bi bi-plus"></i></button>
             </div>
             <div class="item-subtotal">{{item.subtotal | currency:'BRL'}}</div>
-            <button (click)="removeFromCart(i)" class="remove-btn">
-              <i class="bi bi-trash"></i>
-            </button>
+            <button (click)="removeFromCart(i)" class="remove-btn"><i class="bi bi-trash"></i></button>
           </div>
         </div>
       </div>
@@ -103,58 +106,27 @@
         <small>Adicione produtos clicando neles</small>
       </div>
 
-      <!-- RESUMO E PAGAMENTO -->
       <div class="cart-summary" *ngIf="cart.length > 0">
         <div class="customer-info">
           <label>
             <i class="bi bi-person"></i> Cliente
-            <input 
-              type="text" 
-              [(ngModel)]="customerName" 
-              placeholder="Nome do cliente (opcional)"
-              class="customer-input"
-            />
+            <input type="text" [(ngModel)]="customerName" placeholder="Nome do cliente (opcional)" class="customer-input" />
           </label>
         </div>
 
         <div class="payment-method">
           <label>Forma de Pagamento</label>
           <div class="payment-options">
-            <button 
-              class="payment-btn"
-              [class.active]="paymentMethod === 'cash'"
-              (click)="paymentMethod = 'cash'"
-            >
-              <i class="bi bi-cash"></i> Dinheiro
-            </button>
-            <button 
-              class="payment-btn"
-              [class.active]="paymentMethod === 'card'"
-              (click)="paymentMethod = 'card'"
-            >
-              <i class="bi bi-credit-card"></i> Cartão
-            </button>
-            <button 
-              class="payment-btn"
-              [class.active]="paymentMethod === 'pix'"
-              (click)="paymentMethod = 'pix'"
-            >
-              <i class="bi bi-qr-code"></i> PIX
-            </button>
+            <button class="payment-btn" [class.active]="paymentMethod === 'cash'" (click)="paymentMethod = 'cash'"><i class="bi bi-cash"></i> Dinheiro</button>
+            <button class="payment-btn" [class.active]="paymentMethod === 'card'" (click)="paymentMethod = 'card'"><i class="bi bi-credit-card"></i> Cartao</button>
+            <button class="payment-btn" [class.active]="paymentMethod === 'pix'" (click)="paymentMethod = 'pix'"><i class="bi bi-qr-code"></i> PIX</button>
           </div>
         </div>
 
         <div class="cash-input" *ngIf="paymentMethod === 'cash'">
           <label>
             Valor Recebido
-            <input 
-              type="number" 
-              [(ngModel)]="cashReceived" 
-              placeholder="0,00"
-              class="cash-value"
-              step="0.01"
-              min="0"
-            />
+            <input type="number" [(ngModel)]="cashReceived" placeholder="0,00" class="cash-value" step="0.01" min="0" />
           </label>
           <div class="change-info" *ngIf="cashReceived > 0">
             <span>Troco:</span>
@@ -173,11 +145,7 @@
           <button class="btn btn-secondary" (click)="clearCart()" [disabled]="processingPayment">
             <i class="bi bi-x-circle"></i> Limpar
           </button>
-          <button 
-            class="btn btn-primary" 
-            (click)="finalizeSale()"
-            [disabled]="processingPayment"
-          >
+          <button class="btn btn-primary" (click)="finalizeSale()" [disabled]="processingPayment">
             <i class="bi bi-check-circle"></i>
             <span *ngIf="!processingPayment">Finalizar Venda</span>
             <span *ngIf="processingPayment">Processando...</span>

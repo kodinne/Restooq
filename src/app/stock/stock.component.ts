@@ -14,6 +14,11 @@ export class StockComponent implements OnInit {
   load(){ this.svc.list({ page: this.page, limit: this.limit, q: this.q || undefined, status: this.status || undefined }).subscribe(res => { this.products = res.items; this.total = res.total; this.page = res.page; this.limit = res.limit; }); }
   changePage(p: number){ if (p<1) return; const max = Math.ceil(this.total/this.limit)||1; if (p>max) return; this.page = p; this.load(); }
   pagesTotal(){ return Math.ceil(this.total/this.limit) || 1; }
+
+  displayId(index: number): number {
+    const raw = this.total - ((this.page - 1) * this.limit + index);
+    return raw > 0 ? raw : index + 1;
+  }
   
   deleteProduct(id: number | undefined): void {
     if (!id) {
@@ -23,8 +28,9 @@ export class StockComponent implements OnInit {
     
     if (confirm('Tem certeza que deseja remover este produto?')) {
       this.svc.delete(id).subscribe({
-        next: () => {
-          alert('Produto removido com sucesso!');
+        next: (res) => {
+          const message = res?.message || 'Produto removido com sucesso!';
+          alert(message);
           this.load();
         },
         error: (err) => {

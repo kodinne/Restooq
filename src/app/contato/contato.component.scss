@@ -445,3 +445,32 @@
   }
 }
 
+/* UI Polish Layer */
+.contato-content .form-section .form-card,
+.contato-content .info-section .info-card {
+  background: linear-gradient(180deg, #fff 0%, #fbf6f3 100%);
+}
+
+.contato-content .form-section .form-card h2,
+.contato-content .info-section .info-card h3 {
+  color: var(--marrom-escuro);
+}
+
+.contato-content .form-section .form-card .subtitle,
+.contato-content .info-section .info-card .info-item .info-content small {
+  color: var(--text-secondary);
+}
+
+.contato-content .info-section .faq-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.contato-content .info-section .faq-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.16), transparent 38%);
+  pointer-events: none;
+}
+

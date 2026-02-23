@@ -10,14 +10,15 @@ import { ProductsService } from '../services/products.service';
 })
 export class ProductFormComponent implements OnInit {
   loading = false;
+  duplicateNameMsg = '';
   form = this.fb.group({
     sku: [{ value: '', disabled: true }],
     name: ['', Validators.required],
-    category: [''],
-    costPrice: [0, [Validators.required, Validators.min(0)]],
+    category: ['', Validators.required],
+    costPrice: [0, [Validators.required, Validators.min(0.01)]],
     profitMargin: [0, [Validators.required, Validators.min(0)]],
-    price: [0, [Validators.required, Validators.min(0)]],
-    stock: [0, [Validators.required, Validators.min(0)]]
+    price: [0, [Validators.required, Validators.min(0.01)]],
+    stock: [0, [Validators.required, Validators.min(1)]]
   });
 
   private isCalculating = false;
@@ -46,6 +47,10 @@ export class ProductFormComponent implements OnInit {
       if (!this.isCalculating) {
         this.calculateMarginFromPrice();
       }
+    });
+
+    this.form.get('name')?.valueChanges.subscribe(() => {
+      this.duplicateNameMsg = '';
     });
   }
 
@@ -95,12 +100,26 @@ export class ProductFormComponent implements OnInit {
   }
 
   submit(){
-    if(this.form.invalid) return;
+    this.duplicateNameMsg = '';
+    if(this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.loading = true;
     const formData = { ...this.form.getRawValue() };
     this.svc.create(formData as any).subscribe({
       next: ()=> { this.loading=false; this.router.navigate(['/stock']); },
-      error: ()=> this.loading=false
+      error: (err)=> {
+        this.loading = false;
+        const msg = err?.error?.message || '';
+        if (msg.toLowerCase().includes('ja existe')) {
+          this.duplicateNameMsg = msg;
+          this.form.get('name')?.setErrors({ duplicate: true });
+          this.form.get('name')?.markAsTouched();
+          return;
+        }
+        alert(msg || 'Erro ao salvar produto.');
+      }
     });
   }
 }

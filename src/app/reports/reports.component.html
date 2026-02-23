@@ -1,0 +1,89 @@
+<div class="page">
+  <header class="page-header">
+    <div class="title">Relatorios</div>
+    <div class="actions">
+      <button class="btn" (click)="exportCsv()" [disabled]="loading">Exportar CSV</button>
+      <button class="btn primary" (click)="exportPdf()" [disabled]="loading">Gerar PDF</button>
+    </div>
+  </header>
+
+  <section class="toolbar">
+    <label>Periodo</label>
+    <select [(ngModel)]="period" (change)="onPeriodChange()">
+      <option value="all">Todo periodo</option>
+      <option value="today">Hoje</option>
+      <option value="7d">Ultimos 7 dias</option>
+      <option value="30d">Ultimos 30 dias</option>
+      <option value="custom">Personalizado</option>
+    </select>
+
+    <ng-container *ngIf="period === 'custom'">
+      <label for="fromDate">De</label>
+      <input id="fromDate" type="date" [(ngModel)]="fromDate" />
+      <label for="toDate">Ate</label>
+      <input id="toDate" type="date" [(ngModel)]="toDate" />
+    </ng-container>
+
+    <button class="btn" (click)="load()">Atualizar</button>
+  </section>
+
+  <section class="status" *ngIf="loading || errorMsg">
+    <div class="loading" *ngIf="loading">Carregando relatorio...</div>
+    <div class="error" *ngIf="errorMsg">{{ errorMsg }}</div>
+  </section>
+
+  <section class="cards">
+    <div class="card"><div class="label">Vendas Brutas</div><div class="value">{{data.cards.grossSales | currency:'BRL'}}</div></div>
+    <div class="card"><div class="label">Devolucoes</div><div class="value">{{data.cards.returns | currency:'BRL'}}</div></div>
+    <div class="card"><div class="label">Vendas Liquidas</div><div class="value">{{data.cards.netSales | currency:'BRL'}}</div></div>
+    <div class="card"><div class="label">Margem</div><div class="value">{{data.cards.margin | currency:'BRL'}}</div></div>
+    <div class="card"><div class="label">Margem %</div><div class="value">{{data.cards.marginRate | number:'1.1-2'}}%</div></div>
+    <div class="card warn"><div class="label">Estoque Baixo</div><div class="value">{{data.lowStock.length}}</div></div>
+  </section>
+
+  <section class="grid">
+    <div class="panel">
+      <div class="panel-title">Alerta de Estoque Baixo</div>
+      <table class="table">
+        <thead><tr><th>ID</th><th>SKU</th><th>Produto</th><th>Estoque</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let p of data.lowStock">
+            <td>{{p.id}}</td><td>{{p.sku}}</td><td>{{p.name}}</td><td>{{p.stock}}</td>
+          </tr>
+          <tr *ngIf="!data.lowStock.length"><td colspan="4">Sem itens com estoque baixo.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Produtos Parados (Sem venda no periodo)</div>
+      <table class="table">
+        <thead><tr><th>ID</th><th>SKU</th><th>Produto</th><th>Estoque</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let p of data.stalledProducts">
+            <td>{{p.id}}</td><td>{{p.sku}}</td><td>{{p.name}}</td><td>{{p.stock}}</td>
+          </tr>
+          <tr *ngIf="!data.stalledProducts.length"><td colspan="4">Sem produtos parados no periodo.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title">Devolucoes</div>
+    <table class="table">
+      <thead><tr><th>ID</th><th>Pedido</th><th>Produto</th><th>Qtd</th><th>Valor</th><th>Data</th><th>Motivo</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let r of data.returns">
+          <td>{{r.id}}</td>
+          <td>#{{r.orderId}}</td>
+          <td>{{r.productId}}</td>
+          <td>{{r.quantity}}</td>
+          <td>{{r.value | currency:'BRL'}}</td>
+          <td>{{r.date | date:'dd/MM/yyyy HH:mm'}}</td>
+          <td>{{r.reason}}</td>
+        </tr>
+        <tr *ngIf="!data.returns.length"><td colspan="7">Sem devolucoes no periodo.</td></tr>
+      </tbody>
+    </table>
+  </section>
+</div>

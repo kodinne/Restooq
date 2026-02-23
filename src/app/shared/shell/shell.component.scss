@@ -1,100 +1,132 @@
 .layout {
   display: grid;
-  grid-template-columns: 72px 1fr;
+  grid-template-columns: 86px 1fr;
   min-height: 100vh;
-  background: linear-gradient(180deg, #efe5df 0%, #e5d7cf 100%);
-  transition: grid-template-columns 0.2s ease;
+  background:
+    radial-gradient(circle at top right, rgba(161, 136, 127, 0.22), transparent 34%),
+    linear-gradient(180deg, #f2e9e3 0%, #e7dbd4 100%);
+  transition: grid-template-columns 0.25s ease;
 }
+
 .layout.collapsed {
   grid-template-columns: 0 1fr;
 }
+
 .sidebar {
-  background: linear-gradient(180deg, var(--marrom-escuro) 0%, #2f1f1c 100%);
+  background: linear-gradient(180deg, var(--marrom-escuro) 0%, #2b1c19 100%);
   color: var(--branco-sujo);
-  padding: 12px 0;
+  padding: 14px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-shadow: 10px 0 24px rgba(45, 27, 22, 0.2);
+  z-index: 2;
 }
+
 .sidebar .logo {
   margin-bottom: 24px;
-  padding: 0 8px;
-  
+  padding: 0 10px;
+
   .sidebar-logo {
     width: 100%;
     height: auto;
     max-width: 56px;
-    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+    filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.35));
   }
 }
+
 .sidebar .menu a {
   display: block;
-  padding: 12px;
-  color: #e7d6ce;
+  padding: 11px;
+  color: #ead8cf;
   text-decoration: none;
-  margin: 8px 0;
-  border-radius: 8px;
-  transition: all 0.2s;
+  margin: 6px 0;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: transform var(--ease-smooth), background var(--ease-smooth), border-color var(--ease-smooth);
+
+  &:hover {
+    transform: translateY(-1px);
+  }
 }
+
 .sidebar .menu a.active,
 .sidebar .menu a:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.24);
 }
+
 .content {
-  padding: 16px 24px;
+  padding: 18px 24px;
 }
+
 .topbar {
-  background: rgba(255, 255, 255, 0.75);
-  border-radius: 12px;
-  padding: 12px;
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: 16px;
+  padding: 10px 14px;
   display: flex;
   gap: 12px;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 10px 24px rgba(62, 39, 35, 0.08);
-  margin-bottom: 16px;
-  border: 1px solid rgba(62, 39, 35, 0.1);
-  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 28px rgba(62, 39, 35, 0.1);
+  margin-bottom: 18px;
+  border: 1px solid rgba(62, 39, 35, 0.12);
+  backdrop-filter: blur(8px);
 }
+
 .topbar .search {
   border: 1px solid #d6c8c0;
-  border-radius: 24px;
+  border-radius: 999px;
   padding: 10px 16px;
-  width: 280px;
+  width: 320px;
   background: #fff;
 }
+
 .icon-btn {
-  border: none;
+  border: 1px solid transparent;
   background: transparent;
   font-size: 22px;
   line-height: 1;
-  padding: 6px;
+  padding: 8px;
+  border-radius: 10px;
   color: var(--marrom-escuro);
-}
-.username {
-  margin-right: 8px;
-  color: var(--marrom-escuro);
-  font-weight: 600;
+  transition: background var(--ease-smooth), border-color var(--ease-smooth);
+
+  &:hover {
+    background: rgba(93, 64, 55, 0.08);
+    border-color: rgba(93, 64, 55, 0.2);
+  }
 }
 
-/* RESPONSIVIDADE DO SHELL / DASHBOARD */
+.user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.username {
+  margin-right: 6px;
+  color: var(--marrom-escuro);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 @media (max-width: 992px) {
   .layout {
-    grid-template-columns: 56px 1fr;
+    grid-template-columns: 64px 1fr;
   }
 
   .content {
     padding: 12px 16px;
   }
 
-  .topbar {
-    gap: 8px;
+  .topbar .search {
+    width: 100%;
+  }
 
-    .search {
-      width: 100%;
-    }
+  .username {
+    display: none;
   }
 }
 
@@ -106,18 +138,12 @@
   .topbar {
     flex-wrap: wrap;
     align-items: flex-start;
+    gap: 8px;
 
     .search {
       width: 100%;
       order: 3;
-      margin-top: 8px;
-    }
-
-    .user {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      margin-top: 2px;
     }
   }
 

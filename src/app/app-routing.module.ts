@@ -17,30 +17,37 @@ import { OrderFormComponent } from './orders/order-form.component';
 import { PdvComponent } from './pdv/pdv.component';
 import { CustomersComponent } from './customers/customers.component';
 import { ReturnsHistoryComponent } from './returns-history/returns-history.component';
+import { ReportsComponent } from './reports/reports.component';
+import { AuthGuard } from './services/auth.guard';
 
 const routes: Routes = [
-  // Páginas públicas (fora do shell da dashboard)
-  { path:"home", component:HomeComponent },
-  { path:"contato", component:ContatoComponent },
-  { path:"faq", component:FaqComponent },
-  { path:"sobre", component:SobreComponent },
-  { path:"login", component:LoginComponent },
-  { path:"cadastro", component:CadastroComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'contato', component: ContatoComponent },
+  { path: 'faq', component: FaqComponent },
+  { path: 'sobre', component: SobreComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'cadastro', component: CadastroComponent },
 
-  // Área autenticada (shell com sidebar/topbar)
-  { path: '', component: ShellComponent, children: [
-    { path:"", redirectTo:"dashboard", pathMatch:"full" },
-    { path:"dashboard", component:DashboardComponent },
-    { path:"pdv", component:PdvComponent },
-    { path:"orders", component:OrdersComponent },
-    { path:"orders/new", component: OrderFormComponent },
-    { path:"returns", component: ReturnsHistoryComponent },
-    { path:"customers", component: CustomersComponent },
-    { path:"stock", component:StockComponent },
-    { path:"products/new", component: ProductFormComponent },
-    { path:"produtos-cadastrados", component:ProdutosCadastradosComponent },
-    { path:"cadastro-produto", component:CadastroProdutoComponent }
-  ]},
+  {
+    path: '',
+    component: ShellComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'pdv', component: PdvComponent },
+      { path: 'orders', component: OrdersComponent },
+      { path: 'orders/new', component: OrderFormComponent },
+      { path: 'returns', component: ReturnsHistoryComponent },
+      { path: 'reports', component: ReportsComponent },
+      { path: 'customers', component: CustomersComponent },
+      { path: 'stock', component: StockComponent },
+      { path: 'products/new', component: ProductFormComponent },
+      { path: 'produtos-cadastrados', component: ProdutosCadastradosComponent },
+      { path: 'cadastro-produto', component: CadastroProdutoComponent }
+    ]
+  },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

@@ -268,3 +268,47 @@
   }
 }
 
+/* UI Polish Layer */
+.hero-faq {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-faq::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 10% 18%, rgba(255, 255, 255, 0.12), transparent 34%),
+    radial-gradient(circle at 88% 74%, rgba(255, 255, 255, 0.1), transparent 32%);
+}
+
+.faq-content .faq-category h2 {
+  color: var(--marrom-escuro);
+  border-bottom-color: var(--marrom-medio-escuro);
+}
+
+.faq-content .faq-item {
+  background: linear-gradient(180deg, #fff 0%, #fbf6f2 100%);
+}
+
+.faq-content .faq-item summary {
+  color: var(--marrom-escuro);
+}
+
+.faq-content .faq-item summary::after {
+  color: var(--marrom-medio-escuro);
+}
+
+.faq-content .faq-item p {
+  color: var(--text-secondary);
+}
+
+.faq-content .faq-cta {
+  background: linear-gradient(180deg, #fff 0%, #faf2ed 100%);
+}
+
+.faq-content .faq-cta h3 {
+  color: var(--marrom-escuro);
+}
+
