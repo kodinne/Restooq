@@ -14,11 +14,28 @@
     <button class="btn" (click)="page=1; load()">Filtrar</button>
   </div>
 
+  <div class="panel" *ngIf="message">
+    <div class="stock-notice" [ngClass]="messageType">
+      <span>{{ message }}</span>
+      <button class="btn-icon" (click)="clearMessage()"><i class="bi bi-x"></i></button>
+    </div>
+  </div>
+
+  <div class="panel" *ngIf="deleteCandidate">
+    <div class="delete-confirm">
+      <span>Tem certeza que deseja remover o produto "{{ deleteCandidate.name }}"?</span>
+      <div class="actions">
+        <button class="btn" (click)="cancelDelete()">Cancelar</button>
+        <button class="btn danger" (click)="confirmDelete()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
   <div class="panel">
     <table class="table">
       <thead>
         <tr>
-          <th>ID</th><th>SKU</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Status</th><th>Ações</th>
+          <th>ID</th><th>SKU</th><th>Produto</th><th>Categoria</th><th>Preco</th><th>Estoque</th><th>Status</th><th>Acoes</th>
         </tr>
       </thead>
       <tbody>
@@ -31,7 +48,7 @@
           <td>{{p.stock}}</td>
           <td><span class="badge" [class.completed]="p.status==='active' && p.stock > 5" [class.pending]="p.stock<=5">{{ p.stock<=5 ? 'Baixo' : 'OK' }}</span></td>
           <td>
-            <button class="btn-icon" title="Remover produto" (click)="deleteProduct(p.id)">
+            <button class="btn-icon" title="Remover produto" (click)="askDelete(p)">
               <i class="bi bi-trash"></i>
             </button>
           </td>
@@ -40,10 +57,8 @@
     </table>
     <div class="pagination">
       <button class="btn" (click)="changePage(page-1)">Anterior</button>
-      <span>Página {{page}} de {{ pagesTotal() }}</span>
-      <button class="btn" (click)="changePage(page+1)">Próxima</button>
+      <span>Pagina {{page}} de {{ pagesTotal() }}</span>
+      <button class="btn" (click)="changePage(page+1)">Proxima</button>
     </div>
   </div>
 </div>
-
-

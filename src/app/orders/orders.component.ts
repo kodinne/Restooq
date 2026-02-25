@@ -18,55 +18,61 @@ export class OrdersComponent implements OnInit {
   status = '';
   loading = false;
   showDetails: { [key: number]: boolean } = {};
-  
+
+  message = '';
+  messageType: 'success' | 'error' | 'info' = 'info';
+  returnOrder: Order | null = null;
+  returnItemIndex = 0;
+  returnQuantity = 1;
+  returnReason = 'Cliente solicitou';
+  submittingReturn = false;
+
   constructor(
     private svc: OrdersService,
     private http: HttpClient
   ) {}
-  
+
   ngOnInit(): void {
     this.load();
   }
 
-  createSample() {
-    this.loading = true;
-    // create a minimal order with first two products (API will reduce stock)
-    this.svc.create({ customerId: 1, items: [{ productId: 1, quantity: 1 }] }).subscribe({
-      next: ()=> this.load(),
-      error: ()=> this.loading=false
-    });
+  get selectedReturnItem() {
+    return this.returnOrder?.items?.[this.returnItemIndex];
   }
 
-  load(){
+  load(): void {
     this.loading = true;
     this.svc.list({ page: this.page, limit: this.limit, status: this.status || undefined, q: this.q || undefined })
-      .subscribe({ 
-        next: (res)=>{ 
-          this.list = res.items; 
-          this.total = res.total; 
-          this.page = res.page; 
-          this.limit = res.limit; 
-          this.loading=false; 
-        }, 
-        error: ()=> this.loading=false 
+      .subscribe({
+        next: (res) => {
+          this.list = res.items;
+          this.total = res.total;
+          this.page = res.page;
+          this.limit = res.limit;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+          this.setMessage('Erro ao carregar pedidos.', 'error');
+        }
       });
   }
 
-  changePage(p: number){ 
-    if (p<1) return; 
-    const max = Math.ceil(this.total/this.limit)||1; 
-    if (p>max) return; 
-    this.page = p; 
-    this.load(); 
+  changePage(p: number): void {
+    if (p < 1) return;
+    const max = Math.ceil(this.total / this.limit) || 1;
+    if (p > max) return;
+    this.page = p;
+    this.load();
   }
 
-  pagesTotal(){ 
-    return Math.ceil(this.total/this.limit) || 1; 
+  pagesTotal(): number {
+    return Math.ceil(this.total / this.limit) || 1;
   }
 
   exportCsv(): void {
     if (!this.list.length) {
-      alert('Não há pedidos para exportar.');
+      this.setMessage('Nao ha pedidos para exportar.', 'info');
       return;
     }
 
@@ -93,80 +99,72 @@ export class OrdersComponent implements OnInit {
     a.download = `pedidos-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
+    this.setMessage('CSV exportado com sucesso.', 'success');
   }
 
   toggleDetails(orderId: number): void {
     this.showDetails[orderId] = !this.showDetails[orderId];
   }
 
-  registerReturn(order: any): void {
+  registerReturn(order: Order): void {
     if (!order.items || order.items.length === 0) {
-      alert('Este pedido não possui itens para devolução.');
+      this.setMessage('Este pedido nao possui itens para devolucao.', 'error');
       return;
     }
 
-    // Mostra informações do pedido
-    let message = `Pedido #${order.id} - ${order.customerName}\n`;
-    message += `Total: R$ ${order.total.toFixed(2)}\n\n`;
-    message += 'Produtos:\n';
-    order.items.forEach((item: any, index: number) => {
-      message += `${index + 1}. ${item.productName} - Qtd: ${item.quantity} - R$ ${item.unitPrice.toFixed(2)}\n`;
-    });
-    
-    alert(message);
+    this.returnOrder = order;
+    this.returnItemIndex = 0;
+    this.returnQuantity = 1;
+    this.returnReason = 'Cliente solicitou';
+  }
 
-    // Pergunta qual produto devolver
-    const itemIndex = prompt(`Digite o número do produto a devolver (1 a ${order.items.length}):`);
-    if (!itemIndex || isNaN(Number(itemIndex))) {
+  cancelReturn(): void {
+    this.returnOrder = null;
+  }
+
+  submitReturn(): void {
+    if (!this.returnOrder || !this.selectedReturnItem) {
+      this.setMessage('Selecione um pedido e item para devolucao.', 'error');
       return;
     }
 
-    const index = parseInt(itemIndex) - 1;
-    if (index < 0 || index >= order.items.length) {
-      alert('Produto inválido!');
+    const quantity = Number(this.returnQuantity);
+    const max = Number(this.selectedReturnItem.quantity || 0);
+    if (!Number.isInteger(quantity) || quantity <= 0 || quantity > max) {
+      this.setMessage(`Quantidade invalida. Maximo: ${max}.`, 'error');
       return;
     }
 
-    const item = order.items[index];
-    
-    // Pergunta a quantidade
-    const quantityStr = prompt(`Quantidade a devolver (máximo: ${item.quantity}):`);
-    if (!quantityStr || isNaN(Number(quantityStr))) {
-      return;
-    }
+    this.submittingReturn = true;
+    const value = Number(this.selectedReturnItem.unitPrice || 0) * quantity;
 
-    const quantity = parseInt(quantityStr);
-    if (quantity <= 0 || quantity > item.quantity) {
-      alert('Quantidade inválida!');
-      return;
-    }
-
-    // Pergunta o motivo
-    const reason = prompt('Motivo da devolução:', 'Cliente solicitou');
-    if (!reason) {
-      return;
-    }
-
-    const value = item.unitPrice * quantity;
-
-    // Registra a devolução
     this.http.post(this.returnsUrl, {
-      orderId: order.id,
-      productId: item.productId,
-      quantity: quantity,
-      reason: reason,
-      value: value
+      orderId: this.returnOrder.id,
+      productId: this.selectedReturnItem.productId,
+      quantity,
+      reason: this.returnReason || 'Sem motivo informado',
+      value
     }).subscribe({
       next: () => {
-        alert(`Devolução registrada com sucesso!\n\nProduto: ${item.productName}\nQuantidade: ${quantity}\nValor: R$ ${value.toFixed(2)}\n\nO estoque foi atualizado automaticamente.`);
-        this.load(); // Recarrega a lista
+        this.submittingReturn = false;
+        this.returnOrder = null;
+        this.setMessage('Devolucao registrada com sucesso.', 'success');
+        this.load();
       },
       error: (err) => {
-        console.error('Erro ao registrar devolução:', err);
-        const msg = err?.error?.message || 'Erro ao registrar devolucao. Tente novamente.';
-        alert(msg);
+        this.submittingReturn = false;
+        this.setMessage(err?.error?.message || 'Erro ao registrar devolucao.', 'error');
       }
     });
+  }
+
+  clearMessage(): void {
+    this.message = '';
+  }
+
+  private setMessage(message: string, type: 'success' | 'error' | 'info'): void {
+    this.message = message;
+    this.messageType = type;
   }
 
   private escapeCsv(value: string): string {
@@ -174,4 +172,3 @@ export class OrdersComponent implements OnInit {
     return `"${safe}"`;
   }
 }
-

@@ -10,8 +10,13 @@ export class CustomersComponent implements OnInit {
   customers: Customer[] = [];
   q = '';
   loading = false;
+  message = '';
+  messageType: 'success' | 'error' = 'success';
 
   form = { name: '', phone: '', email: '' };
+  editingCustomerId: number | null = null;
+  editForm = { name: '', phone: '', email: '' };
+  deleteCandidate: Customer | null = null;
 
   constructor(private customersService: CustomersService) {}
 
@@ -26,15 +31,19 @@ export class CustomersComponent implements OnInit {
         this.customers = list;
         this.loading = false;
       },
-      error: () => (this.loading = false)
+      error: (err) => {
+        this.loading = false;
+        this.setMessage(err?.error?.message || 'Erro ao carregar clientes.', 'error');
+      }
     });
   }
 
   create(): void {
     if (!this.form.name.trim()) {
-      alert('Nome do cliente é obrigatório');
+      this.setMessage('Nome do cliente e obrigatorio.', 'error');
       return;
     }
+
     this.customersService.create({
       name: this.form.name.trim(),
       phone: this.form.phone.trim() || undefined,
@@ -42,29 +51,74 @@ export class CustomersComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.form = { name: '', phone: '', email: '' };
+        this.setMessage('Cliente criado com sucesso.', 'success');
         this.load();
       },
-      error: (err) => alert(err?.error?.message || 'Erro ao criar cliente')
+      error: (err) => this.setMessage(err?.error?.message || 'Erro ao criar cliente.', 'error')
     });
   }
 
-  edit(customer: Customer): void {
-    const name = prompt('Nome do cliente:', customer.name);
-    if (name === null || !name.trim()) return;
-    const phone = prompt('Telefone do cliente:', customer.phone || '') ?? '';
-    const email = prompt('Email do cliente (opcional):', customer.email || '') ?? '';
+  startEdit(customer: Customer): void {
+    this.editingCustomerId = customer.id;
+    this.editForm = {
+      name: customer.name || '',
+      phone: customer.phone || '',
+      email: customer.email || ''
+    };
+  }
 
-    this.customersService.update(customer.id, { name: name.trim(), phone: phone.trim(), email: email.trim() }).subscribe({
-      next: () => this.load(),
-      error: (err) => alert(err?.error?.message || 'Erro ao atualizar cliente')
+  cancelEdit(): void {
+    this.editingCustomerId = null;
+  }
+
+  saveEdit(customer: Customer): void {
+    if (!this.editForm.name.trim()) {
+      this.setMessage('Nome do cliente e obrigatorio.', 'error');
+      return;
+    }
+
+    this.customersService.update(customer.id, {
+      name: this.editForm.name.trim(),
+      phone: this.editForm.phone.trim(),
+      email: this.editForm.email.trim()
+    }).subscribe({
+      next: () => {
+        this.editingCustomerId = null;
+        this.setMessage('Cliente atualizado com sucesso.', 'success');
+        this.load();
+      },
+      error: (err) => this.setMessage(err?.error?.message || 'Erro ao atualizar cliente.', 'error')
     });
   }
 
-  remove(customer: Customer): void {
-    if (!confirm(`Remover cliente "${customer.name}"?`)) return;
-    this.customersService.delete(customer.id).subscribe({
-      next: () => this.load(),
-      error: (err) => alert(err?.error?.message || 'Erro ao remover cliente')
+  askRemove(customer: Customer): void {
+    this.deleteCandidate = customer;
+  }
+
+  cancelRemove(): void {
+    this.deleteCandidate = null;
+  }
+
+  confirmRemove(): void {
+    if (!this.deleteCandidate) return;
+
+    const id = this.deleteCandidate.id;
+    this.customersService.delete(id).subscribe({
+      next: () => {
+        this.setMessage('Cliente removido com sucesso.', 'success');
+        this.deleteCandidate = null;
+        this.load();
+      },
+      error: (err) => this.setMessage(err?.error?.message || 'Erro ao remover cliente.', 'error')
     });
+  }
+
+  clearMessage(): void {
+    this.message = '';
+  }
+
+  private setMessage(message: string, type: 'success' | 'error'): void {
+    this.message = message;
+    this.messageType = type;
   }
 }

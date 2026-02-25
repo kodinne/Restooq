@@ -159,6 +159,35 @@
   }
 }
 
+.order-notice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid #e8ddd7;
+  border-radius: 8px;
+
+  &.success { border-color: #3c8f5f; }
+  &.error { border-color: #b42336; }
+  &.info { border-color: #5d4037; }
+}
+
+.return-form {
+  display: grid;
+  gap: 10px;
+
+  .title {
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+}
+
 .btn-link {
   background: none;
   border: none;

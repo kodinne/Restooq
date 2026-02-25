@@ -52,6 +52,26 @@
   }
 }
 
+.stock-notice,
+.delete-confirm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e8ddd7;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.stock-notice.success { border-color: #3c8f5f; }
+.stock-notice.error { border-color: #b42336; }
+.stock-notice.info { border-color: #5d4037; }
+
+.delete-confirm .actions {
+  display: flex;
+  gap: 8px;
+}
+
 .panel {
   background: white;
   border-radius: 12px;

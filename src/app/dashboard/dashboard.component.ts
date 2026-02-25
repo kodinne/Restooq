@@ -17,14 +17,34 @@ export class DashboardComponent implements OnInit {
   period: 'all' | 'today' | '7d' | '30d' = '30d';
   data?: DashboardData;
   loading = false;
+
+  message = '';
+  messageType: 'success' | 'error' | 'info' = 'info';
+  showResetConfirm = false;
+
+  restockForm = {
+    productId: null as number | null,
+    quantity: 1
+  };
+
+  returnFormVisible = false;
+  returnOrderIdInput = '';
+  returnOrder: Order | null = null;
+  returnItemIndex = 0;
+  returnQuantity = 1;
+  returnReason = 'Cliente solicitou';
+  returnLoading = false;
+
   barData: ChartData<'bar'> = { labels: [], datasets: [{ data: [], label: 'Quantidade', backgroundColor: '#5D4037' }] };
   barOptions: ChartOptions<'bar'> = {
     responsive: true,
     scales: { y: { beginAtZero: true } },
     plugins: { legend: { display: false } }
   };
-  doughnutData: ChartData<'doughnut'> = { labels: [], datasets: [{ data: [], label: 'Participacao', backgroundColor: ['#5D4037', '#8D6E63', '#A1887F', '#6D4C41', '#4E342E'] }] };
-  donutPercent = 0;
+  doughnutData: ChartData<'doughnut'> = {
+    labels: [],
+    datasets: [{ data: [], label: 'Participacao', backgroundColor: ['#5D4037', '#8D6E63', '#A1887F', '#6D4C41', '#4E342E'] }]
+  };
 
   constructor(
     private svc: DashboardService,
@@ -38,6 +58,10 @@ export class DashboardComponent implements OnInit {
     this.loadDashboard();
   }
 
+  get selectedReturnItem() {
+    return this.returnOrder?.items?.[this.returnItemIndex];
+  }
+
   loadDashboard(): void {
     this.loading = true;
     this.svc.load(this.period).subscribe({
@@ -47,11 +71,7 @@ export class DashboardComponent implements OnInit {
           qty: this.resolveQuantity(t)
         }));
 
-        this.data = {
-          ...d,
-          topSelling
-        };
-
+        this.data = { ...d, topSelling };
         this.barData = {
           labels: topSelling.map(t => t.name),
           datasets: [{ data: topSelling.map(t => t.qty), label: 'Quantidade', backgroundColor: '#5D4037' }]
@@ -60,33 +80,44 @@ export class DashboardComponent implements OnInit {
           labels: topSelling.map(t => t.name),
           datasets: [{ data: topSelling.map(t => t.qty), label: 'Participacao', backgroundColor: ['#5D4037', '#8D6E63', '#A1887F', '#6D4C41', '#4E342E'] }]
         };
-        const total = topSelling.reduce((s, t) => s + t.qty, 0) || 1;
-        this.donutPercent = Math.round((topSelling[0]?.qty || 0) / total * 100);
         this.loading = false;
       },
-      error: () => { this.loading = false; }
+      error: (err) => {
+        this.loading = false;
+        this.showMessage(this.extractErrorMessage(err, 'Erro ao carregar dashboard.'), 'error');
+      }
     });
   }
 
-  restock(productId: number, currentStock: number): void {
-    const quantity = prompt('Quantidade a adicionar ao estoque:');
-    if (!quantity || isNaN(Number(quantity))) return;
+  selectRestockTarget(productId: number): void {
+    this.restockForm.productId = productId;
+  }
 
-    const qty = Number(quantity);
-    if (!Number.isInteger(qty) || qty <= 0) {
-      alert('Digite um numero inteiro maior que zero.');
+  applyRestock(): void {
+    if (!this.restockForm.productId) {
+      this.showMessage('Selecione um produto para reabastecer.', 'error');
       return;
     }
 
-    const newStock = currentStock + qty;
-    this.productsService.updateStock(productId, newStock).subscribe({
+    const qty = Number(this.restockForm.quantity);
+    if (!Number.isInteger(qty) || qty <= 0) {
+      this.showMessage('Digite uma quantidade inteira maior que zero.', 'error');
+      return;
+    }
+
+    const product = (this.data?.stockAlert || []).find(p => p.id === this.restockForm.productId);
+    if (!product) {
+      this.showMessage('Produto selecionado nao encontrado.', 'error');
+      return;
+    }
+
+    const newStock = Number(product.stock || 0) + qty;
+    this.productsService.updateStock(product.id, newStock).subscribe({
       next: () => {
-        alert(`Estoque atualizado com sucesso. Novo estoque: ${newStock}`);
+        this.showMessage(`Estoque atualizado para ${newStock}.`, 'success');
         this.loadDashboard();
       },
-      error: (err) => {
-        alert(this.extractErrorMessage(err, 'Erro ao atualizar estoque.'));
-      }
+      error: (err) => this.showMessage(this.extractErrorMessage(err, 'Erro ao atualizar estoque.'), 'error')
     });
   }
 
@@ -95,91 +126,105 @@ export class DashboardComponent implements OnInit {
   }
 
   resetCharts(): void {
-    this.barData = {
-      labels: [],
-      datasets: [{ data: [], label: 'Quantidade', backgroundColor: '#5D4037' }]
-    };
-    this.doughnutData = {
-      labels: [],
-      datasets: [{
-        data: [],
-        label: 'Participacao',
-        backgroundColor: ['#5D4037', '#8D6E63', '#A1887F', '#6D4C41', '#4E342E']
-      }]
-    };
-    this.donutPercent = 0;
-    if (this.data) {
-      this.data = { ...this.data, topSelling: [] };
-    }
+    this.showResetConfirm = true;
+  }
+
+  confirmResetSales(): void {
+    this.svc.resetSales().subscribe({
+      next: (res) => {
+        this.showResetConfirm = false;
+        this.showMessage(res?.message || 'Vendas e devolucoes apagadas com sucesso.', 'success');
+        this.loadDashboard();
+      },
+      error: (err) => this.showMessage(this.extractErrorMessage(err, 'Erro ao zerar vendas.'), 'error')
+    });
+  }
+
+  cancelResetSales(): void {
+    this.showResetConfirm = false;
   }
 
   registerReturn(): void {
-    const orderIdInput = prompt('ID do pedido (ex: 3 ou #3):');
-    const orderId = this.parseId(orderIdInput);
+    this.returnFormVisible = !this.returnFormVisible;
+    if (!this.returnFormVisible) {
+      this.returnOrder = null;
+      this.returnOrderIdInput = '';
+    }
+  }
+
+  loadOrderForReturn(): void {
+    const orderId = this.parseId(this.returnOrderIdInput);
     if (!orderId) {
-      alert('ID do pedido invalido!');
+      this.showMessage('Informe um ID de pedido valido.', 'error');
       return;
     }
 
     this.ordersService.list({ page: 1, limit: 100, q: String(orderId) }).subscribe({
       next: (res) => {
-        const order = (res.items || []).find((o: Order) => Number(o.id) === orderId);
+        const order = (res.items || []).find((o: Order) => Number(o.id) === orderId) || null;
         if (!order) {
-          alert('Pedido nao encontrado!');
+          this.returnOrder = null;
+          this.showMessage('Pedido nao encontrado.', 'error');
           return;
         }
-
-        if (!order.items || !order.items.length) {
-          alert('Este pedido nao possui itens para devolucao.');
+        if (!order.items?.length) {
+          this.returnOrder = null;
+          this.showMessage('Pedido sem itens para devolucao.', 'error');
           return;
         }
+        this.returnOrder = order;
+        this.returnItemIndex = 0;
+        this.returnQuantity = 1;
+        this.showMessage(`Pedido #${order.id} carregado para devolucao.`, 'info');
+      },
+      error: (err) => this.showMessage(this.extractErrorMessage(err, 'Erro ao buscar pedido.'), 'error')
+    });
+  }
 
-        let itemsMessage = `Pedido #${order.id} - ${order.customerName || 'Cliente'}\n\nItens:\n`;
-        order.items.forEach((item, index) => {
-          itemsMessage += `${index + 1}. ${item.productName || ('Produto ' + item.productId)} - Qtd: ${item.quantity}\n`;
-        });
-        alert(itemsMessage);
+  submitReturn(): void {
+    if (!this.returnOrder || !this.selectedReturnItem) {
+      this.showMessage('Carregue um pedido e selecione um item.', 'error');
+      return;
+    }
 
-        const itemIndexInput = prompt(`Digite o numero do item a devolver (1 a ${order.items.length}):`);
-        const itemIndex = Number(itemIndexInput) - 1;
-        if (!Number.isInteger(itemIndex) || itemIndex < 0 || itemIndex >= order.items.length) {
-          alert('Item invalido!');
-          return;
-        }
+    const quantity = Number(this.returnQuantity);
+    const max = Number(this.selectedReturnItem.quantity || 0);
+    if (!Number.isInteger(quantity) || quantity <= 0 || quantity > max) {
+      this.showMessage(`Quantidade invalida. Maximo permitido: ${max}.`, 'error');
+      return;
+    }
 
-        const item = order.items[itemIndex];
-        const quantityInput = prompt(`Quantidade devolvida (maximo: ${item.quantity}):`);
-        const quantity = Number(quantityInput);
-        if (!Number.isInteger(quantity) || quantity <= 0 || quantity > item.quantity) {
-          alert('Quantidade invalida!');
-          return;
-        }
+    this.returnLoading = true;
+    const value = Number(this.selectedReturnItem.unitPrice ?? 0) * quantity;
 
-        const reason = prompt('Motivo da devolucao:', 'Cliente solicitou');
-        const value = Number(item.unitPrice ?? 0) * quantity;
-
-        this.http.post(this.returnsUrl, {
-          orderId,
-          productId: item.productId,
-          quantity,
-          reason: reason || 'Sem motivo informado',
-          value
-        }).subscribe({
-          next: () => {
-            alert(`Devolucao registrada com sucesso!\n\nProduto: ${item.productName || item.productId}\nQuantidade: ${quantity}\nValor: R$ ${value.toFixed(2)}`);
-            this.loadDashboard();
-          },
-          error: (err) => {
-            console.error('Erro ao registrar devolucao:', err);
-            alert(this.extractErrorMessage(err, 'Erro ao registrar devolucao. Tente novamente.'));
-          }
-        });
+    this.http.post(this.returnsUrl, {
+      orderId: this.returnOrder.id,
+      productId: this.selectedReturnItem.productId,
+      quantity,
+      reason: this.returnReason || 'Sem motivo informado',
+      value
+    }).subscribe({
+      next: () => {
+        this.returnLoading = false;
+        this.showMessage('Devolucao registrada com sucesso.', 'success');
+        this.returnOrder = null;
+        this.returnOrderIdInput = '';
+        this.loadDashboard();
       },
       error: (err) => {
-        console.error('Erro ao buscar pedido:', err);
-        alert(this.extractErrorMessage(err, 'Erro ao buscar pedido. Tente novamente.'));
+        this.returnLoading = false;
+        this.showMessage(this.extractErrorMessage(err, 'Erro ao registrar devolucao.'), 'error');
       }
     });
+  }
+
+  clearMessage(): void {
+    this.message = '';
+  }
+
+  private showMessage(message: string, type: 'success' | 'error' | 'info'): void {
+    this.message = message;
+    this.messageType = type;
   }
 
   private parseId(value: string | null): number | null {

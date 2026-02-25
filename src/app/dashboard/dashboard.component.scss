@@ -2,6 +2,46 @@
   padding: 16px 24px;
 }
 
+.toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.notice,
+.confirm-panel,
+.form-panel {
+  background: #fff;
+  border: 1px solid rgba(62, 39, 35, 0.14);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &.success { border-color: #3c8f5f; }
+  &.error { border-color: #b42336; }
+  &.info { border-color: #5d4037; }
+}
+
+.confirm-panel,
+.form-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.confirm-actions,
+.form-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .quick-actions {
   margin-bottom: 22px;
   background: rgba(255, 255, 255, 0.72);

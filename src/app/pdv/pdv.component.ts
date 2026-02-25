@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ProductsService, Product } from '../services/products.service';
 import { OrdersService } from '../services/orders.service';
+import { Customer, CustomersService } from '../services/customers.service';
 
 interface CartItem {
   product: Product;
@@ -22,8 +23,9 @@ export class PdvComponent implements OnInit {
   loading = false;
   processingPayment = false;
 
-  customerName = '';
-  customerId = 1;
+  customers: Customer[] = [];
+  customerId: number | null = null;
+  guestCustomerName = '';
 
   paymentMethod: 'cash' | 'card' | 'pix' = 'cash';
   cashReceived = 0;
@@ -33,11 +35,13 @@ export class PdvComponent implements OnInit {
 
   constructor(
     private productsService: ProductsService,
-    private ordersService: OrdersService
+    private ordersService: OrdersService,
+    private customersService: CustomersService
   ) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.loadCustomers();
   }
 
   loadProducts(): void {
@@ -70,6 +74,25 @@ export class PdvComponent implements OnInit {
     return this.products.filter(p => p.stock <= 5);
   }
 
+  get selectedCustomerName(): string {
+    if (this.guestCustomerName.trim()) return this.guestCustomerName.trim();
+    const selected = this.customers.find(c => c.id === this.customerId);
+    return selected?.name || 'Cliente';
+  }
+
+  loadCustomers(): void {
+    this.customersService.list().subscribe({
+      next: (list) => {
+        this.customers = list || [];
+        if (!this.customers.some(c => c.id === this.customerId)) this.customerId = null;
+      },
+      error: () => {
+        this.customers = [];
+        this.customerId = null;
+      }
+    });
+  }
+
   addToCart(product: Product): void {
     if (!product.id) {
       this.showToast('Produto invalido.');
@@ -99,6 +122,11 @@ export class PdvComponent implements OnInit {
   }
 
   updateQuantity(item: CartItem, quantity: number): void {
+    if (!Number.isFinite(quantity) || !Number.isInteger(quantity)) {
+      this.showToast('Quantidade deve ser um numero inteiro.');
+      return;
+    }
+
     if (quantity <= 0) {
       const index = this.cart.indexOf(item);
       this.removeFromCart(index);
@@ -108,7 +136,10 @@ export class PdvComponent implements OnInit {
     if (quantity <= item.product.stock) {
       item.quantity = quantity;
       item.subtotal = item.quantity * item.product.price;
+      return;
     }
+
+    this.showToast('Quantidade acima do estoque disponivel.');
   }
 
   incrementQuantity(item: CartItem): void {
@@ -142,8 +173,8 @@ export class PdvComponent implements OnInit {
 
   clearCart(): void {
     this.cart = [];
-    this.customerName = '';
     this.cashReceived = 0;
+    this.guestCustomerName = '';
   }
 
   quickAddFirstFiltered(): void {
@@ -182,10 +213,14 @@ export class PdvComponent implements OnInit {
       return;
     }
 
-    this.ordersService.create({
-      customerId: this.customerId,
+    const payload: { customerId?: number | null; customerName?: string; items: { productId: number; quantity: number }[] } = {
       items: orderItems
-    }).subscribe({
+    };
+
+    if (this.customerId) payload.customerId = this.customerId;
+    if (this.guestCustomerName.trim()) payload.customerName = this.guestCustomerName.trim();
+
+    this.ordersService.create(payload).subscribe({
       next: () => {
         this.showToast('Venda realizada com sucesso.');
         this.clearCart();

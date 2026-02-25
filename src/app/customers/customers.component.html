@@ -4,6 +4,11 @@
   </header>
 
   <div class="panel">
+    <div class="notice" *ngIf="message" [ngClass]="messageType">
+      <span>{{ message }}</span>
+      <button type="button" class="btn-icon" (click)="clearMessage()"><i class="bi bi-x"></i></button>
+    </div>
+
     <div class="toolbar">
       <input placeholder="Buscar cliente" [(ngModel)]="q" (keyup.enter)="load()" />
       <button class="btn" (click)="load()">Filtrar</button>
@@ -16,21 +21,39 @@
       <button class="btn primary" (click)="create()">+ Cliente</button>
     </div>
 
+    <div class="confirm-delete" *ngIf="deleteCandidate">
+      <span>Remover cliente "{{ deleteCandidate.name }}"?</span>
+      <div class="actions">
+        <button class="btn" (click)="cancelRemove()">Cancelar</button>
+        <button class="btn danger" (click)="confirmRemove()">Confirmar</button>
+      </div>
+    </div>
+
     <table class="table">
       <thead>
         <tr>
-          <th>ID</th><th>Nome</th><th>Telefone</th><th>Email</th><th>Ações</th>
+          <th>ID</th><th>Nome</th><th>Telefone</th><th>Email</th><th>Acoes</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let c of customers">
           <td>{{ c.id }}</td>
-          <td>{{ c.name }}</td>
-          <td>{{ c.phone || '-' }}</td>
-          <td>{{ c.email }}</td>
-          <td>
-            <button class="btn-icon" title="Editar" (click)="edit(c)"><i class="bi bi-pencil"></i></button>
-            <button class="btn-icon" title="Excluir" (click)="remove(c)"><i class="bi bi-trash"></i></button>
+          <td *ngIf="editingCustomerId !== c.id">{{ c.name }}</td>
+          <td *ngIf="editingCustomerId === c.id"><input [(ngModel)]="editForm.name" /></td>
+
+          <td *ngIf="editingCustomerId !== c.id">{{ c.phone || '-' }}</td>
+          <td *ngIf="editingCustomerId === c.id"><input [(ngModel)]="editForm.phone" /></td>
+
+          <td *ngIf="editingCustomerId !== c.id">{{ c.email }}</td>
+          <td *ngIf="editingCustomerId === c.id"><input [(ngModel)]="editForm.email" /></td>
+
+          <td *ngIf="editingCustomerId !== c.id">
+            <button class="btn-icon" title="Editar" (click)="startEdit(c)"><i class="bi bi-pencil"></i></button>
+            <button class="btn-icon" title="Excluir" (click)="askRemove(c)"><i class="bi bi-trash"></i></button>
+          </td>
+          <td *ngIf="editingCustomerId === c.id">
+            <button class="btn-icon" title="Salvar" (click)="saveEdit(c)"><i class="bi bi-check2"></i></button>
+            <button class="btn-icon" title="Cancelar" (click)="cancelEdit()"><i class="bi bi-x-lg"></i></button>
           </td>
         </tr>
       </tbody>

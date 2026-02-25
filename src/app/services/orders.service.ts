@@ -37,7 +37,7 @@ export class OrdersService {
     if (params?.q) hp = hp.set('q', params.q);
     return this.http.get<{items: Order[]; total: number; page: number; limit: number}>(this.apiUrl, { params: hp });
   }
-  create(body: { customerId: number; items: { productId: number; quantity: number }[] }): Observable<any> {
+  create(body: { customerId?: number | null; customerName?: string; items: { productId: number; quantity: number }[] }): Observable<any> {
     return this.http.post<any>(this.apiUrl, body);
   }
 }

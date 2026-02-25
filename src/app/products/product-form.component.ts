@@ -11,6 +11,8 @@ import { ProductsService } from '../services/products.service';
 export class ProductFormComponent implements OnInit {
   loading = false;
   duplicateNameMsg = '';
+  message = '';
+  messageType: 'success' | 'error' = 'success';
   form = this.fb.group({
     sku: [{ value: '', disabled: true }],
     name: ['', Validators.required],
@@ -101,6 +103,7 @@ export class ProductFormComponent implements OnInit {
 
   submit(){
     this.duplicateNameMsg = '';
+    this.message = '';
     if(this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -118,9 +121,18 @@ export class ProductFormComponent implements OnInit {
           this.form.get('name')?.markAsTouched();
           return;
         }
-        alert(msg || 'Erro ao salvar produto.');
+        this.setMessage(msg || 'Erro ao salvar produto.', 'error');
       }
     });
+  }
+
+  clearMessage(): void {
+    this.message = '';
+  }
+
+  private setMessage(message: string, type: 'success' | 'error'): void {
+    this.message = message;
+    this.messageType = type;
   }
 }
 

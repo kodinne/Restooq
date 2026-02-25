@@ -91,7 +91,7 @@
           <div class="item-controls">
             <div class="quantity-control">
               <button (click)="decrementQuantity(item)" class="qty-btn"><i class="bi bi-dash"></i></button>
-              <input type="number" [value]="item.quantity" (change)="updateQuantity(item, +$any($event.target).value)" min="1" [max]="item.product.stock" class="qty-input" />
+              <input type="number" [value]="item.quantity" (change)="updateQuantity(item, +$any($event.target).value)" min="1" step="1" [max]="item.product.stock" class="qty-input" />
               <button (click)="incrementQuantity(item)" class="qty-btn"><i class="bi bi-plus"></i></button>
             </div>
             <div class="item-subtotal">{{item.subtotal | currency:'BRL'}}</div>
@@ -110,8 +110,23 @@
         <div class="customer-info">
           <label>
             <i class="bi bi-person"></i> Cliente
-            <input type="text" [(ngModel)]="customerName" placeholder="Nome do cliente (opcional)" class="customer-input" />
+            <select [(ngModel)]="customerId" class="customer-input">
+              <option [ngValue]="null">Sem cliente selecionado</option>
+              <option *ngFor="let customer of customers" [ngValue]="customer.id">
+                {{ customer.name }}{{ customer.email ? ' - ' + customer.email : '' }}
+              </option>
+            </select>
           </label>
+          <label>
+            Cliente avulso (opcional)
+            <input
+              type="text"
+              [(ngModel)]="guestCustomerName"
+              placeholder="Ex: Cliente balcão"
+              class="customer-input"
+            />
+          </label>
+          <button type="button" class="btn btn-secondary" (click)="loadCustomers()">Atualizar lista</button>
         </div>
 
         <div class="payment-method">

@@ -20,6 +20,32 @@
     </div>
   </div>
 
+  <div class="panel" *ngIf="message">
+    <div class="order-notice" [ngClass]="messageType">
+      <span>{{ message }}</span>
+      <button class="btn-icon" (click)="clearMessage()"><i class="bi bi-x"></i></button>
+    </div>
+  </div>
+
+  <div class="panel" *ngIf="returnOrder">
+    <div class="return-form">
+      <div class="title">Devolucao - Pedido #{{ returnOrder.id }}</div>
+      <div class="row">
+        <select [(ngModel)]="returnItemIndex">
+          <option *ngFor="let item of returnOrder.items; let i = index" [ngValue]="i">
+            {{ item.productName || ('Produto ' + item.productId) }} - Qtd: {{ item.quantity }}
+          </option>
+        </select>
+        <input type="number" min="1" [max]="selectedReturnItem?.quantity || 1" [(ngModel)]="returnQuantity" placeholder="Quantidade" />
+        <input type="text" [(ngModel)]="returnReason" placeholder="Motivo" />
+      </div>
+      <div class="row">
+        <button class="btn" (click)="cancelReturn()">Cancelar</button>
+        <button class="btn primary" [disabled]="submittingReturn" (click)="submitReturn()">Registrar devolucao</button>
+      </div>
+    </div>
+  </div>
+
   <div class="panel">
     <table class="table">
       <thead>
