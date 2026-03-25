@@ -1,0 +1,19 @@
+footer {
+  background: rgba(255, 255, 255, 0.75);
+  border-top-color: rgba(62, 39, 35, 0.14) !important;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+footer h5 {
+  color: var(--marrom-escuro);
+}
+
+footer .nav-link {
+  color: var(--text-secondary) !important;
+}
+
+footer .nav-link:hover {
+  color: var(--marrom-medio-escuro) !important;
+  text-decoration: underline;
+}

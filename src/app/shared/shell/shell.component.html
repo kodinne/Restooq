@@ -1,0 +1,36 @@
+<div class="layout" [class.collapsed]="collapsed">
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="assets/REStooq.png" alt="REStooq" class="sidebar-logo" />
+    </div>
+    <nav class="menu">
+      <a routerLink="/dashboard" routerLinkActive="active" title="Dashboard"><i class="bi bi-speedometer2"></i></a>
+      <a routerLink="/pdv" routerLinkActive="active" title="PDV - Ponto de Venda"><i class="bi bi-cart3"></i></a>
+      <a routerLink="/orders" routerLinkActive="active" title="Pedidos"><i class="bi bi-receipt"></i></a>
+      <a routerLink="/reports" routerLinkActive="active" title="Relatorios"><i class="bi bi-file-earmark-bar-graph"></i></a>
+      <a routerLink="/returns" routerLinkActive="active" title="Devoluções"><i class="bi bi-arrow-return-left"></i></a>
+      <a routerLink="/customers" routerLinkActive="active" title="Clientes"><i class="bi bi-people"></i></a>
+      <a routerLink="/stock" routerLinkActive="active" title="Estoque"><i class="bi bi-box-seam"></i></a>
+      <a routerLink="/products/new" routerLinkActive="active" title="Novo Produto"><i class="bi bi-plus-circle"></i></a>
+    </nav>
+  </aside>
+  <main class="content">
+    <header class="topbar">
+      <button class="icon-btn" (click)="toggleSidebar()" title="Alternar menu"><i class="bi bi-list"></i></button>
+      <input placeholder="Pesquisar" class="search" />
+      <div class="user">
+        <ng-container *ngIf="auth.getUserName(); else loggedOut">
+          <span class="username"><i class="bi bi-person-circle"></i> {{auth.getUserName()}}</span>
+          <button class="btn" (click)="logout()">Sair</button>
+        </ng-container>
+        <ng-template #loggedOut>
+          <a class="btn" routerLink="/login">Entrar</a>
+          <a class="btn primary" routerLink="/cadastro">Cadastrar</a>
+        </ng-template>
+      </div>
+    </header> 
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+

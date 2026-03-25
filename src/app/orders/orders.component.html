@@ -1,0 +1,120 @@
+<div class="page">
+  <header class="page-header">
+    <div class="title">Pedidos</div>
+    <div class="actions">
+      <button class="btn" (click)="exportCsv()">Exportar CSV</button>
+      <button class="btn" disabled>Importar pedidos</button>
+      <a class="btn primary" routerLink="/orders/new">+ Novo Pedido</a>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <input placeholder="Buscar por cliente, destino ou #ID" [(ngModel)]="q" (keyup.enter)="page=1; load()" />
+    <div class="filters">
+      <select [(ngModel)]="status" (change)="page=1; load()">
+        <option value="">Todos</option>
+        <option value="returned">Devolvido</option>
+        <option value="completed">Concluido</option>
+      </select>
+      <button class="btn" (click)="page=1; load()">Filtrar</button>
+    </div>
+  </div>
+
+  <div class="panel" *ngIf="message">
+    <div class="order-notice" [ngClass]="messageType">
+      <span>{{ message }}</span>
+      <button class="btn-icon" (click)="clearMessage()"><i class="bi bi-x"></i></button>
+    </div>
+  </div>
+
+  <div class="panel" *ngIf="returnOrder">
+    <div class="return-form">
+      <div class="title">Devolucao - Pedido #{{ returnOrder.id }}</div>
+      <div class="row">
+        <select [(ngModel)]="returnItemIndex">
+          <option *ngFor="let item of returnOrder.items; let i = index" [ngValue]="i">
+            {{ item.productName || ('Produto ' + item.productId) }} - Qtd: {{ item.quantity }}
+          </option>
+        </select>
+        <input type="number" min="1" [max]="selectedReturnItem?.quantity || 1" [(ngModel)]="returnQuantity" placeholder="Quantidade" />
+        <input type="text" [(ngModel)]="returnReason" placeholder="Motivo" />
+      </div>
+      <div class="row">
+        <button class="btn" (click)="cancelReturn()">Cancelar</button>
+        <button class="btn primary" [disabled]="submittingReturn" (click)="submitReturn()">Registrar devolucao</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#ID</th>
+          <th>Data</th>
+          <th>Cliente</th>
+          <th>Total</th>
+          <th>Itens</th>
+          <th>Status</th>
+          <th>Acoes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let o of list">
+          <tr>
+            <td><strong>#{{o.id}}</strong></td>
+            <td>{{o.createdAt | date:'dd/MM/yyyy HH:mm'}}</td>
+            <td>{{o.customerName || 'Cliente #' + o.customerId}}</td>
+            <td><strong>{{o.total | currency:'BRL'}}</strong></td>
+            <td>
+              <button class="btn-link" (click)="toggleDetails(o.id)" title="Ver produtos">
+                {{o.items.length || 0}} produto(s)
+                <i class="bi" [class.bi-chevron-down]="!showDetails[o.id]" [class.bi-chevron-up]="showDetails[o.id]"></i>
+              </button>
+            </td>
+            <td>
+              <span class="badge" [class.completed]="o.status==='completed'" [class.pending]="o.status==='pending'" [class.returned]="o.status==='returned'">
+                {{ o.status==='completed' ? 'Concluido' : (o.status==='returned' ? 'Devolvido' : 'Pendente') }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-icon btn-return" (click)="registerReturn(o)" title="Registrar Devolucao">
+                <i class="bi bi-arrow-return-left"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="showDetails[o.id]" class="details-row">
+            <td colspan="7">
+              <div class="order-details">
+                <h4>Produtos da Venda #{{o.id}}</h4>
+                <table class="details-table">
+                  <thead>
+                    <tr>
+                      <th>Produto</th>
+                      <th>Quantidade</th>
+                      <th>Preco Unit.</th>
+                      <th>Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of o.items">
+                      <td>{{item.productName || 'Produto ID ' + item.productId}}</td>
+                      <td>{{item.quantity}}</td>
+                      <td>{{item.unitPrice | currency:'BRL'}}</td>
+                      <td><strong>{{item.subtotal | currency:'BRL'}}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button class="btn" (click)="changePage(page-1)">Anterior</button>
+      <span>Pagina {{page}} de {{ pagesTotal() }}</span>
+      <button class="btn" (click)="changePage(page+1)">Proxima</button>
+    </div>
+  </div>
+</div>

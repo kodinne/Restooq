@@ -1,0 +1,159 @@
+<div class="layout">
+  <div></div>
+  <main class="content">
+    <section class="quick-actions">
+      <h2>Acoes Rapidas</h2>
+      <div class="action-buttons">
+        <a routerLink="/products/new" class="action-btn add">
+          <i class="bi bi-plus-circle"></i>
+          <span>Adicionar Produto</span>
+        </a>
+        <a routerLink="/stock" class="action-btn manage">
+          <i class="bi bi-box-seam"></i>
+          <span>Gerenciar Estoque</span>
+        </a>
+        <a routerLink="/pdv" class="action-btn sale">
+          <i class="bi bi-cart3"></i>
+          <span>Nova Venda (PDV)</span>
+        </a>
+        <a routerLink="/reports" class="action-btn manage">
+          <i class="bi bi-file-earmark-bar-graph"></i>
+          <span>Relatorios</span>
+        </a>
+        <button (click)="registerReturn()" class="action-btn return">
+          <i class="bi bi-arrow-return-left"></i>
+          <span>Registrar Devolucao</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <label>Periodo:</label>
+      <select [(ngModel)]="period" (change)="loadDashboard()">
+        <option value="all">Tudo</option>
+        <option value="today">Hoje</option>
+        <option value="7d">7 dias</option>
+        <option value="30d">30 dias</option>
+      </select>
+      <button class="btn" (click)="resetCharts()">
+        <i class="bi bi-eraser"></i>
+        Zerar dados de vendas
+      </button>
+    </section>
+
+    <section class="notice" *ngIf="message" [ngClass]="messageType">
+      <span>{{ message }}</span>
+      <button type="button" class="btn-icon" (click)="clearMessage()"><i class="bi bi-x"></i></button>
+    </section>
+
+    <section class="confirm-panel" *ngIf="showResetConfirm">
+      <div>Tem certeza que deseja apagar todas as vendas e devolucoes?</div>
+      <div class="confirm-actions">
+        <button class="btn" (click)="cancelResetSales()">Cancelar</button>
+        <button class="btn danger" (click)="confirmResetSales()">Confirmar</button>
+      </div>
+    </section>
+
+    <section class="form-panel" *ngIf="data?.stockAlert?.length">
+      <h3>Reabastecer Estoque</h3>
+      <div class="form-row">
+        <select [(ngModel)]="restockForm.productId">
+          <option [ngValue]="null">Selecione um produto</option>
+          <option *ngFor="let p of data?.stockAlert" [ngValue]="p.id">
+            {{ p.name }} (estoque atual: {{ p.stock }})
+          </option>
+        </select>
+        <input type="number" min="1" [(ngModel)]="restockForm.quantity" placeholder="Quantidade" />
+        <button class="btn" (click)="applyRestock()">Aplicar</button>
+      </div>
+    </section>
+
+    <section class="form-panel" *ngIf="returnFormVisible">
+      <h3>Devolucao</h3>
+      <div class="form-row">
+        <input type="text" [(ngModel)]="returnOrderIdInput" placeholder="ID do pedido (ex: 12)" />
+        <button class="btn" (click)="loadOrderForReturn()">Buscar Pedido</button>
+      </div>
+
+      <div *ngIf="returnOrder" class="form-row">
+        <select [(ngModel)]="returnItemIndex">
+          <option *ngFor="let item of returnOrder.items; let i = index" [ngValue]="i">
+            {{ item.productName || ('Produto ' + item.productId) }} - Qtd: {{ item.quantity }}
+          </option>
+        </select>
+        <input type="number" min="1" [max]="selectedReturnItem?.quantity || 1" [(ngModel)]="returnQuantity" placeholder="Quantidade" />
+        <input type="text" [(ngModel)]="returnReason" placeholder="Motivo" />
+        <button class="btn return" [disabled]="returnLoading" (click)="submitReturn()">Registrar</button>
+      </div>
+    </section>
+
+    <section class="cards" *ngIf="data">
+      <div class="card"><div class="title">Receita</div><div class="value">{{data.cards.revenue | currency:'BRL':'symbol':'1.0-0'}}</div></div>
+      <div class="card"><div class="title">Devolucoes</div><div class="value">{{data.cards.salesReturn | currency:'BRL':'symbol':'1.0-0'}}</div></div>
+      <div class="card"><div class="title">Lucro</div><div class="value">{{data.cards.income | currency:'BRL':'symbol':'1.0-0'}}</div></div>
+    </section>
+
+    <section class="grid">
+      <div class="panel bar-chart">
+        <div class="panel-title">Mais vendidos (Quantidade)</div>
+        <canvas baseChart [data]="barData" [options]="barOptions" [type]="'bar'"></canvas>
+      </div>
+      <div class="panel donut">
+        <div class="panel-title">Participacao por produto</div>
+        <canvas baseChart [data]="doughnutData" [type]="'doughnut'"></canvas>
+        <ul class="legend" *ngIf="data">
+          <li *ngFor="let t of data.topSelling">{{t.name}} - {{t.qty}}</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="panel-title">Alerta de estoque baixo</div>
+        <table class="table" *ngIf="data">
+          <thead>
+            <tr>
+              <th>ID</th><th>SKU</th><th>Produto</th><th>Estoque</th><th>Status</th><th>Acao</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of data.stockAlert">
+              <td>{{p.id}}</td>
+              <td>{{p.sku}}</td>
+              <td>{{p.name}}</td>
+              <td>{{p.stock}}</td>
+              <td><span class="badge warning">Baixo</span></td>
+              <td>
+                <button class="btn-icon" title="Selecionar para reabastecer" (click)="selectRestockTarget(p.id)">
+                  <i class="bi bi-plus-circle"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="!data.stockAlert.length">
+              <td colspan="6">
+                Nenhum item com estoque baixo.
+                <button class="link-btn" (click)="goToStock()">Ver estoque</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Produtos mais vendidos</div>
+        <table class="table" *ngIf="data">
+          <thead>
+            <tr>
+              <th>Produto</th><th>Quantidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of data.topSelling">
+              <td>{{t.name}}</td>
+              <td>{{t.qty}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>

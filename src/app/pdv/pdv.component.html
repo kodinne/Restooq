@@ -1,1 +1,172 @@
-<p>pdv works!</p>
+<div class="pdv-container">
+  <div class="pdv-header">
+    <div class="header-content">
+      <h1><i class="bi bi-cup-hot"></i> PDV - Ponto de Venda</h1>
+      <p class="subtitle">Sistema de vendas rapido e eficiente</p>
+      <button class="shortcuts-toggle" (click)="toggleShortcuts()">
+        <i class="bi bi-keyboard"></i> Atalhos
+      </button>
+      <div class="shortcuts" *ngIf="shortcutsVisible">
+        <span><strong>F2</strong> Buscar produto</span>
+        <span><strong>F4</strong> Finalizar venda</span>
+        <span><strong>Esc</strong> Limpar carrinho</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" *ngIf="toastMessage">{{toastMessage}}</div>
+
+  <div class="pdv-layout">
+    <div class="products-section">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          #searchInput
+          type="text"
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="quickAddFirstFiltered()"
+          placeholder="Buscar produto por nome, SKU ou categoria... (Enter adiciona o primeiro)"
+          class="search-input"
+        />
+      </div>
+
+      <div class="stock-alert" *ngIf="lowStockProducts.length">
+        <i class="bi bi-exclamation-triangle"></i>
+        Estoque baixo em {{lowStockProducts.length}} produto(s):
+        <strong>{{lowStockProducts[0].name}}</strong><span *ngIf="lowStockProducts.length > 1"> e outros</span>
+      </div>
+
+      <div class="products-grid" *ngIf="!loading">
+        <div
+          *ngFor="let product of filteredProducts"
+          class="product-card"
+          (click)="addToCart(product)"
+          [class.low-stock]="product.stock <= 5"
+        >
+          <div class="product-icon">
+            <i class="bi bi-cup-hot-fill"></i>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">{{product.name}}</h3>
+            <p class="product-category">{{product.category || 'Sem categoria'}}</p>
+            <div class="product-details">
+              <span class="product-price">{{product.price | currency:'BRL'}}</span>
+              <span class="product-stock" [class.low]="product.stock <= 5">
+                <i class="bi bi-box"></i> {{product.stock}}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="filteredProducts.length === 0" class="empty-state">
+          <i class="bi bi-inbox"></i>
+          <p>Nenhum produto encontrado</p>
+        </div>
+      </div>
+
+      <div class="loading-state" *ngIf="loading">
+        <i class="bi bi-arrow-repeat spin"></i>
+        <p>Carregando produtos...</p>
+      </div>
+    </div>
+
+    <div class="cart-section">
+      <div class="cart-header">
+        <h2><i class="bi bi-cart3"></i> Carrinho</h2>
+        <span class="cart-count">{{totalItems}} {{totalItems === 1 ? 'item' : 'itens'}}</span>
+      </div>
+
+      <div class="cart-items" *ngIf="cart.length > 0">
+        <div *ngFor="let item of cart; let i = index" class="cart-item">
+          <div class="item-info">
+            <div class="item-icon">
+              <i class="bi bi-cup-hot"></i>
+            </div>
+            <div class="item-details">
+              <h4>{{item.product.name}}</h4>
+              <p class="item-price">{{item.product.price | currency:'BRL'}} cada</p>
+            </div>
+          </div>
+
+          <div class="item-controls">
+            <div class="quantity-control">
+              <button (click)="decrementQuantity(item)" class="qty-btn"><i class="bi bi-dash"></i></button>
+              <input type="number" [value]="item.quantity" (change)="updateQuantity(item, +$any($event.target).value)" min="1" step="1" [max]="item.product.stock" class="qty-input" />
+              <button (click)="incrementQuantity(item)" class="qty-btn"><i class="bi bi-plus"></i></button>
+            </div>
+            <div class="item-subtotal">{{item.subtotal | currency:'BRL'}}</div>
+            <button (click)="removeFromCart(i)" class="remove-btn"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-cart" *ngIf="cart.length === 0">
+        <i class="bi bi-cart-x"></i>
+        <p>Carrinho vazio</p>
+        <small>Adicione produtos clicando neles</small>
+      </div>
+
+      <div class="cart-summary" *ngIf="cart.length > 0">
+        <div class="customer-info">
+          <label>
+            <i class="bi bi-person"></i> Cliente
+            <select [(ngModel)]="customerId" class="customer-input">
+              <option [ngValue]="null">Sem cliente selecionado</option>
+              <option *ngFor="let customer of customers" [ngValue]="customer.id">
+                {{ customer.name }}{{ customer.email ? ' - ' + customer.email : '' }}
+              </option>
+            </select>
+          </label>
+          <label>
+            Cliente avulso (opcional)
+            <input
+              type="text"
+              [(ngModel)]="guestCustomerName"
+              placeholder="Ex: Cliente balcão"
+              class="customer-input"
+            />
+          </label>
+          <button type="button" class="btn btn-secondary" (click)="loadCustomers()">Atualizar lista</button>
+        </div>
+
+        <div class="payment-method">
+          <label>Forma de Pagamento</label>
+          <div class="payment-options">
+            <button class="payment-btn" [class.active]="paymentMethod === 'cash'" (click)="paymentMethod = 'cash'"><i class="bi bi-cash"></i> Dinheiro</button>
+            <button class="payment-btn" [class.active]="paymentMethod === 'card'" (click)="paymentMethod = 'card'"><i class="bi bi-credit-card"></i> Cartao</button>
+            <button class="payment-btn" [class.active]="paymentMethod === 'pix'" (click)="paymentMethod = 'pix'"><i class="bi bi-qr-code"></i> PIX</button>
+          </div>
+        </div>
+
+        <div class="cash-input" *ngIf="paymentMethod === 'cash'">
+          <label>
+            Valor Recebido
+            <input type="number" [(ngModel)]="cashReceived" placeholder="0,00" class="cash-value" step="0.01" min="0" />
+          </label>
+          <div class="change-info" *ngIf="cashReceived > 0">
+            <span>Troco:</span>
+            <strong>{{change | currency:'BRL'}}</strong>
+          </div>
+        </div>
+
+        <div class="total-section">
+          <div class="total-row">
+            <span>Total</span>
+            <strong class="total-value">{{total | currency:'BRL'}}</strong>
+          </div>
+        </div>
+
+        <div class="cart-actions">
+          <button class="btn btn-secondary" (click)="clearCart()" [disabled]="processingPayment">
+            <i class="bi bi-x-circle"></i> Limpar
+          </button>
+          <button class="btn btn-primary" (click)="finalizeSale()" [disabled]="processingPayment">
+            <i class="bi bi-check-circle"></i>
+            <span *ngIf="!processingPayment">Finalizar Venda</span>
+            <span *ngIf="processingPayment">Processando...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

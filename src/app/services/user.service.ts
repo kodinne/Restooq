@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from './api-base';
 
 export interface User {
   id: number;
   name: string;
   email: string;
-  phone: string;
-  password: string;
+  password?: string;
 }
 
 //Data Transfer Object
 export interface CreateUserDto{
   name: string;
   email: string;
-  phone: string;
   password: string;
 }
 
@@ -22,7 +21,7 @@ export interface CreateUserDto{
   providedIn: 'root'
 })
 export class UserService {
-  private readonly apiUrl = 'http://localhost:3000/users';
+  private readonly apiUrl = `${API_BASE_URL}/users`;
 
 
   constructor(private http: HttpClient) { }
@@ -58,8 +57,9 @@ export class UserService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  register(body: any): Observable<any>{
+  register(body: CreateUserDto): Observable<any>{
     return this.http.post<any>(`${this.apiUrl}`, body);
   }
 
 }
+

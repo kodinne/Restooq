@@ -1,0 +1,64 @@
+<div class="page">
+  <header class="page-header">
+    <div class="title">Em estoque</div>
+    <a class="btn primary" routerLink="/products/new">+ Novo Produto</a>
+  </header>
+
+  <div class="toolbar">
+    <input placeholder="Buscar por SKU, nome ou categoria" [(ngModel)]="q" (keyup.enter)="page=1; load()" />
+    <select [(ngModel)]="status" (change)="page=1; load()">
+      <option value="">Todos</option>
+      <option value="active">Ativo</option>
+      <option value="inactive">Inativo</option>
+    </select>
+    <button class="btn" (click)="page=1; load()">Filtrar</button>
+  </div>
+
+  <div class="panel" *ngIf="message">
+    <div class="stock-notice" [ngClass]="messageType">
+      <span>{{ message }}</span>
+      <button class="btn-icon" (click)="clearMessage()"><i class="bi bi-x"></i></button>
+    </div>
+  </div>
+
+  <div class="panel" *ngIf="deleteCandidate">
+    <div class="delete-confirm">
+      <span>Tem certeza que deseja remover o produto "{{ deleteCandidate.name }}"?</span>
+      <div class="actions">
+        <button class="btn" (click)="cancelDelete()">Cancelar</button>
+        <button class="btn danger" (click)="confirmDelete()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th><th>SKU</th><th>Produto</th><th>Categoria</th><th>Preco</th><th>Estoque</th><th>Status</th><th>Acoes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products; let i = index">
+          <td>{{displayId(i)}}</td>
+          <td>{{p.sku}}</td>
+          <td>{{p.name}}</td>
+          <td>{{p.category || '-'}}</td>
+          <td>{{p.price | currency:'BRL'}}</td>
+          <td>{{p.stock}}</td>
+          <td><span class="badge" [class.completed]="p.status==='active' && p.stock > 5" [class.pending]="p.stock<=5">{{ p.stock<=5 ? 'Baixo' : 'OK' }}</span></td>
+          <td>
+            <button class="btn-icon" title="Remover produto" (click)="askDelete(p)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button class="btn" (click)="changePage(page-1)">Anterior</button>
+      <span>Pagina {{page}} de {{ pagesTotal() }}</span>
+      <button class="btn" (click)="changePage(page+1)">Proxima</button>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,157 @@
-<p>contato works!</p>
+<app-public-header></app-public-header>
+
+<div class="contato-page">
+  <section class="hero-contato">
+    <div class="container">
+      <div class="hero-content">
+        <i class="bi bi-envelope-heart"></i>
+        <h1>Entre em Contato</h1>
+        <p class="lead">Estamos aqui para ajudar você</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contato-content">
+    <div class="container">
+      <div class="contato-grid">
+        <!-- FORMULÁRIO DE CONTATO -->
+        <div class="form-section">
+          <div class="form-card">
+            <h2><i class="bi bi-chat-left-text"></i> Envie sua Mensagem</h2>
+            <p class="subtitle">Responderemos o mais breve possível</p>
+            
+            <form class="contact-form">
+              <div class="form-group">
+                <label for="name">
+                  <i class="bi bi-person"></i> Nome Completo
+                </label>
+                <input 
+                  type="text" 
+                  id="name" 
+                  placeholder="Seu nome completo"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email">
+                  <i class="bi bi-envelope"></i> E-mail
+                </label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  placeholder="seu@email.com"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="phone">
+                  <i class="bi bi-phone"></i> Telefone (opcional)
+                </label>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  placeholder="(00) 00000-0000"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="subject">
+                  <i class="bi bi-tag"></i> Assunto
+                </label>
+                <select id="subject" required>
+                  <option value="">Selecione um assunto</option>
+                  <option value="duvida">Dúvida sobre o sistema</option>
+                  <option value="suporte">Suporte técnico</option>
+                  <option value="comercial">Informações comerciais</option>
+                  <option value="sugestao">Sugestão ou feedback</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="message">
+                  <i class="bi bi-chat-square-text"></i> Mensagem
+                </label>
+                <textarea 
+                  id="message" 
+                  rows="6" 
+                  placeholder="Como podemos ajudar você?"
+                  required
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn coffee">
+                <i class="bi bi-send"></i>
+                Enviar Mensagem
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- INFORMAÇÕES DE CONTATO -->
+        <div class="info-section">
+          <div class="info-card">
+            <h3><i class="bi bi-info-circle"></i> Informações de Contato</h3>
+            
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="bi bi-envelope-fill"></i>
+              </div>
+              <div class="info-content">
+                <h4>E-mail</h4>
+                <p>contato@restooq.com.br</p>
+                <small>Respondemos em até 24 horas</small>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="bi bi-whatsapp"></i>
+              </div>
+              <div class="info-content">
+                <h4>WhatsApp</h4>
+                <p>(21) 99999-9999</p>
+                <small>Seg - Sex: 9h às 18h</small>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="bi bi-geo-alt-fill"></i>
+              </div>
+              <div class="info-content">
+                <h4>Endereço</h4>
+                <p>Nova Iguaçu, RJ</p>
+                <small>Brasil</small>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="bi bi-clock-fill"></i>
+              </div>
+              <div class="info-content">
+                <h4>Horário de Atendimento</h4>
+                <p>Segunda a Sexta</p>
+                <small>9:00 - 18:00</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-card">
+            <i class="bi bi-question-circle"></i>
+            <h3>Dúvidas Rápidas?</h3>
+            <p>Consulte nossa página de perguntas frequentes. Talvez sua resposta já esteja lá!</p>
+            <a routerLink="/faq" class="btn outline">
+              <i class="bi bi-journal-text"></i>
+              Ver FAQ
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
